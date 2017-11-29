@@ -1,0 +1,20 @@
+State/Board
+  spaces
+    id
+      hasPlayer
+      hasBall
+  players
+    id
+      name
+      team
+        guy
+          id
+          hasBall
+          canMove
+          canShoot
+
+      goals
+      shots
+      saves
+  state
+    moves

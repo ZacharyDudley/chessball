@@ -19,6 +19,7 @@ const Main = (props) => {
       <nav>
         <Link to="/home">Home</Link>
         <Link to="/game">Play</Link>
+        <Link to="/field">Practice</Link>
       </nav>
       <hr />
       {children}
