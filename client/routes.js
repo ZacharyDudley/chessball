@@ -23,7 +23,7 @@ class Routes extends Component {
         <Main>
           <Switch>
             <Route path="/game" component={Stadium} />
-            <Route path="/field" component={Field} />
+            <Route path="/field/:gameId" component={Field} />
             <Route path="/space" component={Space} />
           </Switch>
         </Main>

@@ -6,4 +6,4 @@
 export {default as Main} from './main'
 export {default as Field } from './field'
 export {default as Space } from './space'
-export { Stadium } from './stadium'
+export { default as Stadium } from './stadium'

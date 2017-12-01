@@ -1,22 +1,54 @@
-import React from 'react'
-import {Space} from './'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Space } from './'
+import firebase from '../firebase'
 
 import '../css/field.scss';
 
 
-const Field = () => {
-  const spaces = []
-  var i=0
+class Field extends Component {
 
-  for (var h = 0; h < 9; h++) {
-    for (var w = 0; w < 12; w++) {
-      spaces.push(<Space key={i++} x={w} y={h} />)
-    }
+  componentDidMount(){
+    const { getBoard } = this.props
+
+    getBoard()
   }
 
-  return (
-    <div className="field">{spaces}</div>
-  )
+  render () {
+    // const { spaces } = this.props
+
+    return (
+      <div className="field">
+      {
+        console.log(this.props)
+        // spaces.map((space, i) => {
+        //   return (<Space key={i} id={[space.x, space.y]} />)
+        // })
+      }
+      </div>
+    )
+  }
 }
 
-export default Field
+const mapState = (state) => {
+  return {
+    state: state,
+    spaces: state.field.spaces
+  }
+}
+
+const mapDispatch = (dispatch, ownProps) => {
+  const gameId = ownProps.match.params.gameId
+
+  return {
+    getBoard: () => {
+      firebase.ref(`/games/${gameId}/`).once('value')
+        .then(snap => {console.log(snap)})
+    },
+    updateBoard: () => {
+      // firebase.ref(`/games/${gameId}/`).update()
+    }
+  }
+}
+
+export default connect(mapState, mapDispatch)(Field)
