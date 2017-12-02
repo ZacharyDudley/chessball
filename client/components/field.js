@@ -30,7 +30,8 @@ class Field extends Component {
 
 const mapState = (state) => {
   return {
-    spaces: state.game.spaces
+    spaces: state.game.spaces,
+    state: state.game.state
   }
 }
 
