@@ -19,7 +19,8 @@ const Main = (props) => {
       <nav>
         <Link to="/home">Home</Link>
         <Link to="/game">Play</Link>
-        <Link to="/field">Practice</Link>
+        <Link to="/field">Field</Link>
+        <Link to="/practice">Practice</Link>
       </nav>
       <hr />
       {children}

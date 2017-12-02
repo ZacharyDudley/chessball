@@ -13,8 +13,8 @@ State/Board
           canMove
           canShoot
 
-      goals
-      shots
-      saves
   state
     moves
+    goals
+    shots
+    saves

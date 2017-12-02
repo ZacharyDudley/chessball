@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import '../css/space.scss';
 
 const Space = (props) => {
-  const { state } = props
 
   const spaceHandler = () => {
     console.log(props)
@@ -20,7 +19,6 @@ const Space = (props) => {
  */
 const mapState = (state) => {
   return {
-    state: state
   }
 }
 

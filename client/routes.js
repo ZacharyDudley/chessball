@@ -4,7 +4,7 @@ import {Router} from 'react-router'
 import {Route, Switch} from 'react-router-dom'
 // import PropTypes from 'prop-types'
 import history from './history'
-import {Main, Stadium, Field, Space} from './components'
+import {Main, Stadium, Field, Space, Game} from './components'
 // import {me} from './store'
 
 /**
@@ -25,6 +25,7 @@ class Routes extends Component {
             <Route path="/game" component={Stadium} />
             <Route path="/field/:gameId" component={Field} />
             <Route path="/space" component={Space} />
+            <Route path="/practice" component={Game} />
           </Switch>
         </Main>
       </Router>

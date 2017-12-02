@@ -2,13 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import firebase from '../firebase'
 
-import Space from './'
-
 const Stadium = props => {
-  const { createGame } = props
+  const { buildGame } = props
 
     return (
-      <button onClick={createGame}>CREATE</button>
+      <button onClick={buildGame}>CREATE</button>
     )
   }
 
@@ -21,22 +19,34 @@ const mapState = (state) => {
 const mapDispatch = (dispatch, ownProps) => {
 
   return {
-    createGame(){
-      const spaces = {}
-      var i=0
+    buildGame(){
+      const spaces = []
+      var i = 0
 
-      for (var h = 0; h <= 9; h++) {
-        for (var w = 0; w <= 12; w++) {
-          // spaces.push(<Space key={i++} x={w} y={h} />)
-          spaces[i++] = {
+      for (var h = 0; h <= 6; h++) {
+        for (var w = 0; w <= 9; w++) {
+          spaces.push({
+            id: i++,
             coords: [w, h],
             hasBall: false,
             hasPlayer: ''
-          }
+          })
         }
       }
 
-      const field = { spaces /*, players, state*/ }
+      const state = {
+        currentPlayer: 1,
+        p1Moves: 0,
+        p2Moves: 0,
+        p1Goals: 0,
+        p2Goals: 0,
+        p1Shots: 0,
+        p2Shots: 0,
+        p1Saves: 0,
+        p2Saves: 0,
+      }
+
+      const field = { spaces, state }
 
       firebase.ref('games').push(field)
         .then(snap => ownProps.history.push(`/field/${snap.key}`))

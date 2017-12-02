@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Space } from './'
+import { updateBoard } from '../store'
 import firebase from '../firebase'
 
 import '../css/field.scss';
@@ -9,21 +10,18 @@ import '../css/field.scss';
 class Field extends Component {
 
   componentDidMount(){
-    const { getBoard } = this.props
-
-    getBoard()
+    this.props.getBoard()
   }
 
-  render () {
-    // const { spaces } = this.props
+  render() {
+    const { spaces } = this.props
 
     return (
       <div className="field">
       {
-        console.log(this.props)
-        // spaces.map((space, i) => {
-        //   return (<Space key={i} id={[space.x, space.y]} />)
-        // })
+        spaces && spaces.map(space => {
+          return (<Space key={space.id} space={space} />)
+        })
       }
       </div>
     )
@@ -32,21 +30,18 @@ class Field extends Component {
 
 const mapState = (state) => {
   return {
-    state: state,
-    spaces: state.field.spaces
+    spaces: state.game.spaces
   }
 }
 
 const mapDispatch = (dispatch, ownProps) => {
   const gameId = ownProps.match.params.gameId
-
+  // updateGame(dispatch)
   return {
     getBoard: () => {
-      firebase.ref(`/games/${gameId}/`).once('value')
-        .then(snap => {console.log(snap)})
-    },
-    updateBoard: () => {
-      // firebase.ref(`/games/${gameId}/`).update()
+      firebase.ref(`/games/${gameId}/`).on('value', snap => {
+        dispatch(updateBoard(snap.val()))
+      })
     }
   }
 }
