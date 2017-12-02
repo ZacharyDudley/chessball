@@ -10,17 +10,19 @@ import '../css/field.scss';
 class Field extends Component {
 
   componentDidMount(){
-    this.props.getBoard()
+    const {getBoard, spaces} = this.props
+    getBoard()
+    markSpaces(spaces)
   }
 
   render() {
-    const { spaces } = this.props
+    const { spaces, handleClick } = this.props
 
     return (
       <div className="field">
       {
         spaces && spaces.map(space => {
-          return (<Space key={space.id} space={space} />)
+          return (<div className="space" key={space.id} space={space} onClick={() => handleClick(space)} />)
         })
       }
       </div>
@@ -43,6 +45,12 @@ const mapDispatch = (dispatch, ownProps) => {
       firebase.ref(`/games/${gameId}/`).on('value', snap => {
         dispatch(updateBoard(snap.val()))
       })
+    },
+    handleClick: (space) => {
+      // if (!space.hasBall) {
+        firebase.ref(`/games/${gameId}/state/`).update({selectedSpace: space.id})
+        console.log(space)
+      // }
     }
   }
 }

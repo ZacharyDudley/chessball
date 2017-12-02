@@ -4,13 +4,16 @@ import { connect } from 'react-redux'
 import '../css/space.scss';
 
 const Space = (props) => {
+  const { containsBall } = props
 
   const spaceHandler = () => {
-    console.log(props)
+    // if (containsBall) {
+    //   console.log(props)
+    // }
   }
 
   return (
-    <div className="space" onClick={spaceHandler} />
+    <div className="space" /*onClick={spaceHandler}*/ />
   )
 }
 
@@ -19,7 +22,7 @@ const Space = (props) => {
  */
 const mapState = (state) => {
   return {
-
+    containsBall: state.game.state.hasBall
   }
 }
 

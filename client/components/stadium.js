@@ -12,7 +12,7 @@ const Stadium = props => {
 
 const mapState = (state) => {
   return {
-    state: state
+    // state: state
   }
 }
 
@@ -23,8 +23,8 @@ const mapDispatch = (dispatch, ownProps) => {
       const spaces = []
       var i = 0
 
-      for (var h = 0; h <= 6; h++) {
-        for (var w = 0; w <= 9; w++) {
+      for (var h = 0; h <= 7; h++) {
+        for (var w = 0; w <= 12; w++) {
           spaces.push({
             id: i++,
             coords: [w, h],
@@ -35,6 +35,7 @@ const mapDispatch = (dispatch, ownProps) => {
       }
 
       const state = {
+        selectedSpace: 0,
         currentPlayer: 1,
         p1Moves: 0,
         p2Moves: 0,
