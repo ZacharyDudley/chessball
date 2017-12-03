@@ -36,7 +36,7 @@ const mapDispatch = (dispatch, ownProps) => {
 
       const state = {
         selectedSpace: 0,
-        currentPlayer: 1,
+        currentTeam: 1,
         p1Moves: 0,
         p2Moves: 0,
         p1Goals: 0,
