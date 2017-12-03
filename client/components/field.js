@@ -13,15 +13,19 @@ class Field extends Component {
   componentDidMount(){
     const {getBoard, spaces} = this.props
     // getBoard()
-    // markSpaces(spaces)
   }
 
   componentWillReceiveProps(){
-    markSpaces(this.props.spaces)
+    const {state, spaces} = this.props
+
+    if (state) {
+      markSpaces(spaces, state.selectedSpace)
+    }
   }
 
   render() {
     const { spaces, handleClick } = this.props
+    // spaces && markSpaces(spaces)
 
     return (
       <div className="field">
@@ -38,7 +42,7 @@ class Field extends Component {
 const mapState = (state) => {
   return {
     spaces: state.game.spaces,
-    state: state.game.state
+    state: state.game.state,
   }
 }
 
