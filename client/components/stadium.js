@@ -47,7 +47,62 @@ const mapDispatch = (dispatch, ownProps) => {
         p2Saves: 0,
       }
 
-      const field = { spaces, state }
+      const teams = {
+        teamBlue: {
+          name: 'blue',
+          guys: {
+            forwardRight: {
+              coords: [],
+            },
+            forwardLeft: {
+              coords: []
+            },
+            forwardCenter: {
+              coords: [3, 4]
+            },
+            midfield: {
+              coords: [3, 3]
+            },
+            defenseRight: {
+              coords: []
+            },
+            defenseLeft: {
+              coords: []
+            },
+            goalie: {
+              coords: []
+            }
+          }
+        },
+        teamRed: {
+          name: 'red',
+          guys: {
+            forwardRight: {
+              coords: [],
+            },
+            forwardLeft: {
+              coords: []
+            },
+            forwardCenter: {
+              coords: [7, 3]
+            },
+            midfield: {
+              coords: [8, 4]
+            },
+            defenseRight: {
+              coords: [10, 6]
+            },
+            defenseLeft: {
+              coords: [10, 1]
+            },
+            goalie: {
+              coords: []
+            }
+          }
+        }
+      }
+
+      const field = { spaces, state, teams }
 
       firebase.ref('games').push(field)
         .then(snap => ownProps.history.push(`/field/${snap.key}`))
