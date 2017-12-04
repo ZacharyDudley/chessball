@@ -52,7 +52,8 @@ const mapDispatch = (dispatch, ownProps) => {
 
   firebase.ref(`/games/${gameId}/`).on('value', snap => {
     console.log(snap.val())
-    dispatch(updateBoard(snap.val()))})
+    dispatch(updateBoard(snap.val()))
+  })
 
     return {
     // getBoard: () => {
