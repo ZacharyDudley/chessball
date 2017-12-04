@@ -1,11 +1,11 @@
+import axios from 'axios'
 import history from '../history'
 import firebase from '../firebase'
 
 // ACTION TYPES
 
-// const GET_BOARD = 'GET_BOARD'
-const SET_SPACE = 'SET_SPACE'
-const UPDATE_BOARD = 'UPDATE_BOARD'
+const CREATE_GAME = 'CREATE_GAME'
+const UPDATE_SCORE = 'UPDATE_SCORE'
 
 // INITIAL STATE
 
@@ -13,9 +13,8 @@ const defaultBoard = {}
 
 // ACTION CREATORS
 
-// const getBoard = id => ({type: GET_BOARD, id})
-export const setSpace = space => ({type: SET_SPACE, space})
-export const updateBoard = board => ({type: UPDATE_BOARD, board})
+export const createGame = () => ({type: CREATE_GAME})
+export const updateScore = score => ({type: UPDATE_SCORE, score})
 
 // THUNK
 
@@ -32,16 +31,30 @@ export const updateBoard = board => ({type: UPDATE_BOARD, board})
 //   })
 // }
 
+export const countGoal = (gameId, teamId) => dispatch => {
+  axios.put(`/api/games/${gameId}`, teamId)
+  .then(res => dispatch(updateScore(res.data)))
+  .catch(err => console.error(`Updating score for ${teamId} unsuccessful`, err));
+}
+
+export const buildGame = () => dispatch => {
+  axios.post(`/api/games/`)
+  .then(res => dispatch(createGame(res.data)))
+  .catch(err => console.error(`Creating game unsuccessful`, err));
+}
+
+
 // REDUCER
 
 export default function (state = defaultBoard, action) {
   switch (action.type) {
-    // case GET_BOARD:
-    //   return action.id
-    case SET_SPACE:
-      return action.board
-    case UPDATE_BOARD:
-      return action.board
+
+    case CREATE_GAME:
+      return state
+
+    case UPDATE_SCORE:
+      return action.score
+
     default:
       return state
   }

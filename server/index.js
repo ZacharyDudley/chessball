@@ -43,6 +43,10 @@ module.exports = app
     res.sendFile(path.join(__dirname, '..', 'public/index.html'))
   })
 
+  // routes to api
+  // app.use('/api', require('./api/api.router'));
+
+
   // error handling endware
   app.use((err, req, res, next) => {
     console.error(err)

@@ -2,13 +2,13 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import space from './space';
+import field from './field';
 import game from './game'
 // import boardsList from './getBoards'
 // import inGame from './inGame';
 
 const reducer = combineReducers({
-  space,
+  field,
   game,
   // inGame,
   // boardsList
