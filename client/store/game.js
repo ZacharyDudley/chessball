@@ -1,6 +1,6 @@
 import axios from 'axios'
 import history from '../history'
-import firebase from '../firebase'
+// import firebase from '../firebase'
 
 // ACTION TYPES
 
@@ -9,11 +9,13 @@ const UPDATE_SCORE = 'UPDATE_SCORE'
 
 // INITIAL STATE
 
-const defaultBoard = {}
+const defaultBoard = {
+  // id: ''
+}
 
 // ACTION CREATORS
 
-export const createGame = () => ({type: CREATE_GAME})
+export const createGame = id => ({type: CREATE_GAME, id})
 export const updateScore = score => ({type: UPDATE_SCORE, score})
 
 // THUNK
@@ -37,8 +39,8 @@ export const countGoal = (gameId, teamId) => dispatch => {
   .catch(err => console.error(`Updating score for ${teamId} unsuccessful`, err));
 }
 
-export const buildGame = () => dispatch => {
-  axios.post(`/api/games/`)
+export const buildGame = game => dispatch => {
+  axios.post(`/api/games/`, game)
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
@@ -50,7 +52,7 @@ export default function (state = defaultBoard, action) {
   switch (action.type) {
 
     case CREATE_GAME:
-      return state
+      return action.id
 
     case UPDATE_SCORE:
       return action.score

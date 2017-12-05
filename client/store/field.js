@@ -1,6 +1,6 @@
 import axios from 'axios'
 import history from '../history'
-import firebase from '../firebase'
+// import firebase from '../firebase'
 
 // ACTION TYPES
 
@@ -10,7 +10,7 @@ const UPDATE_PLAYER = 'UPDATE_PLAYER'
 // INITIAL STATE
 
 const defaultSpace = {
-  ballIsAt: ''
+  // ballIsAt: ''
 }
 
 // ACTION CREATORS

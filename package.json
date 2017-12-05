@@ -11,6 +11,7 @@
   "author": "Zachary Dudley Friedman",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "express": "^4.16.2",

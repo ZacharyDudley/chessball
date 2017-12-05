@@ -1,4 +1,5 @@
-import * as firebase from 'firebase'
+// import * as firebase from 'firebase'
+const firebase = require('firebase')
 
 let config = {
   apiKey: 'AIzaSyBReCWwAgNu4T6uNtd4auL9hc8cFE-lXPc',
@@ -14,4 +15,4 @@ firebase.initializeApp(config)
 const database = firebase.database()
 // line below enables logging for debugging
 // firebase.database.enableLogging(true)
-export default database
+module.exports = database
