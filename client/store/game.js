@@ -5,6 +5,7 @@ import history from '../history'
 // ACTION TYPES
 
 const CREATE_GAME = 'CREATE_GAME'
+const UPDATE_FIELD = 'UPDATE_FIELD'
 const UPDATE_SCORE = 'UPDATE_SCORE'
 
 // INITIAL STATE
@@ -16,6 +17,7 @@ const defaultBoard = {
 // ACTION CREATORS
 
 export const createGame = id => ({type: CREATE_GAME, id})
+export const updateField = field => ({type: UPDATE_FIELD, field})
 export const updateScore = score => ({type: UPDATE_SCORE, score})
 
 // THUNK
@@ -32,6 +34,17 @@ export const updateScore = score => ({type: UPDATE_SCORE, score})
 //     dispatch(updateBoard(snap.value))
 //   })
 // }
+export const buildGame = game => dispatch => {
+  axios.post(`/api/games/`, game)
+  .then(res => dispatch(createGame(res.data)))
+  .catch(err => console.error(`Creating game unsuccessful`, err));
+}
+
+export const getField = gameId => dispatch => {
+  axios.get(`/api/games/${gameId}`)
+  .then(res => dispatch(updateField(res.data)))
+  .catch(err => console.error(`Creating game unsuccessful`, err));
+}
 
 export const countGoal = (gameId, teamId) => dispatch => {
   axios.put(`/api/games/${gameId}`, teamId)
@@ -39,11 +52,6 @@ export const countGoal = (gameId, teamId) => dispatch => {
   .catch(err => console.error(`Updating score for ${teamId} unsuccessful`, err));
 }
 
-export const buildGame = game => dispatch => {
-  axios.post(`/api/games/`, game)
-  .then(res => dispatch(createGame(res.data)))
-  .catch(err => console.error(`Creating game unsuccessful`, err));
-}
 
 
 // REDUCER
@@ -53,6 +61,9 @@ export default function (state = defaultBoard, action) {
 
     case CREATE_GAME:
       return action.id
+
+    case UPDATE_FIELD:
+      return action.field
 
     case UPDATE_SCORE:
       return action.score

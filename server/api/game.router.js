@@ -9,27 +9,27 @@ const router = require('express').Router()
 // var Story = require('../stories/story.model');
 
 router.get('/', function (req, res, next) {
-  console.log('HERE')
   const { gameId } = req.body
   // firebase.ref(`/games/${gameId}/`).on('value', snap => {
-  firebase.ref(`/${gameId}`).once('value')
-    .then(snap => {
+  firebase.ref(`/games/${gameId}`).once('value')
+  .then(snap => {
       res.send(snap.val())
     })
+  .catch(err => next(err))
 })
 
 router.post('/', function (req, res, next) {
+  firebase.ref('/').push(req.body)
+  .then(snap => res.status(201).send(snap.key))
+  .catch(err => next(err))
+
   // firebase.ref('/').push(req.body, err => {
   //   if (err) {
   //     res.sendStatus(500)
   //   } else {
-
   //     res.sendStatus(201)
   //   }
   // })
-  firebase.ref('/').push(req.body)
-    .then(snap => res.status(201).send(snap.key))
-    .catch(err => next(err))
 })
 
 // router.param('id', function (req, res, next, id) {
