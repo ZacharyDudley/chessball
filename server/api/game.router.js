@@ -8,13 +8,9 @@ const router = require('express').Router()
 // var User = require('./user.model');
 // var Story = require('../stories/story.model');
 
-router.get('/', function (req, res, next) {
-  const { gameId } = req.body
-  // firebase.ref(`/games/${gameId}/`).on('value', snap => {
-  firebase.ref(`/games/${gameId}`).once('value')
-  .then(snap => {
-      res.send(snap.val())
-    })
+router.get('/:gameId', function (req, res, next) {
+  firebase.ref(`/${req.params.gameId}`).once('value')
+  .then(snap => res.status(200).send(snap.val()))
   .catch(err => next(err))
 })
 

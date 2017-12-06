@@ -1,43 +1,52 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { buildGame } from '../store'
 // import firebase from '../firebase'
 
-const Stadium = props => {
-  const { handleCreateGame } = props
+class Stadium extends Component {
 
-  const spaces = []
-  var i = 0
-
-  for (var h = 0; h <= 7; h++) {
-    for (var w = 0; w <= 12; w++) {
-      spaces.push({
-        id: i++,
-        coords: [w, h],
-        hasBall: false,
-        hasPlayer: ''
-      })
+  componentDidUpdate() {
+    if (this.props.gameId) {
+      this.props.history.push(`/${this.props.gameId}`)
     }
   }
 
-  const state = {
-    selectedSpace: 0,
-    currentTeam: 1,
-    p1Moves: 0,
-    p2Moves: 0,
-    p1Goals: 0,
-    p2Goals: 0,
-    p1Shots: 0,
-    p2Shots: 0,
-    p1Saves: 0,
-    p2Saves: 0,
+  render () {
+    const { handleCreateGame } = this.props
+
+    const spaces = []
+    var i = 0
+
+    for (var h = 0; h <= 7; h++) {
+      for (var w = 0; w <= 12; w++) {
+        spaces.push({
+          id: i++,
+          coords: [w, h],
+          hasBall: false,
+          hasPlayer: ''
+        })
+      }
+    }
+
+    const state = {
+      selectedSpace: 0,
+      currentTeam: 1,
+      p1Moves: 0,
+      p2Moves: 0,
+      p1Goals: 0,
+      p2Goals: 0,
+      p1Shots: 0,
+      p2Shots: 0,
+      p1Saves: 0,
+      p2Saves: 0,
+    }
+
+    const game = { spaces, state }
+
+    return (
+      <button onClick={() => handleCreateGame(game)}>CREATE</button>
+    )
   }
-
-  const game = { spaces, state }
-
-  return (
-    <button onClick={() => handleCreateGame(game)}>CREATE</button>
-  )
 }
 
 const mapState = (state) => {
