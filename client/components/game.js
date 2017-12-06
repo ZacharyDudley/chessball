@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Space } from './'
 import { setBoard } from '../store'
-import firebase from '../firebase'
+// import firebase from '../firebase'
 
 import '../css/field.scss';
 
@@ -46,15 +46,15 @@ const mapDispatch = (dispatch, ownProps) => {
   const gameId = ownProps.match.params.gameId
 
   return {
-    getBoard: () => {
-      firebase.ref(`/games/${gameId}/`).on('value', snap => {
-        // dispatch(setBoard(snap.val()))
-        console.log(snap.val())
-      })
-    },
-    updateBoard: () => {
-      // firebase.ref(`/games/${gameId}/`).update()
-    }
+    // getBoard: () => {
+    //   firebase.ref(`/games/${gameId}/`).on('value', snap => {
+    //     // dispatch(setBoard(snap.val()))
+    //     console.log(snap.val())
+    //   })
+    // },
+    // updateBoard: () => {
+    //   // firebase.ref(`/games/${gameId}/`).update()
+    // }
   }
 }
 

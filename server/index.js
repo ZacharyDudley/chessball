@@ -6,7 +6,20 @@ const compression = require('compression')
 const PORT = process.env.PORT || 1337
 const app = express()
 const socketio = require('socket.io')
+// const firebase = require('firebase')
 module.exports = app
+
+// firebase.initializeApp({
+//   apiKey: 'AIzaSyBReCWwAgNu4T6uNtd4auL9hc8cFE-lXPc',
+//   authDomain: 'chessball-a79ba.firebaseapp.com',
+//   databaseURL: 'https://chessball-a79ba.firebaseio.com',
+//   projectId: 'chessball-a79ba',
+//   storageBucket: '',
+//   messagingSenderId: '621667083617'
+// })
+
+// const db = firebase.database()
+// const ref = db.ref('/')
 
 /**
  * In your development environment, you can keep all of your
@@ -35,13 +48,16 @@ module.exports = app
   // compression middleware
   app.use(compression())
 
+  // routes to api
+  app.use('/api', require('./api'));
+
   // static file-serving middleware
   app.use(express.static(path.join(__dirname, '..', 'public')))
 
   // sends index.html
-  app.use('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public/index.html'))
-  })
+  // app.use('*', (req, res) => {
+  //   res.sendFile(path.join(__dirname, '..', 'public/index.html'))
+  // })
 
   // error handling endware
   app.use((err, req, res, next) => {

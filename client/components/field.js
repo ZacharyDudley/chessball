@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { updateBoard } from '../store'
-import firebase from '../firebase'
+import { getField } from '../store'
 
 import '../css/field.scss';
 
@@ -10,7 +9,7 @@ import '../css/field.scss';
 class Field extends Component {
 
   componentDidMount(){
-
+    getField()
   }
 
   componentWillReceiveProps(){
@@ -40,8 +39,9 @@ class Field extends Component {
   }
 }
 
-const mapState = (state) => {
+const mapState = (state, ownProps) => {
   return {
+    gameId: ownProps.match.params.gameId,
     spaces: state.game.spaces,
     state: state.game.state,
   }
@@ -50,8 +50,10 @@ const mapState = (state) => {
 const mapDispatch = (dispatch, ownProps) => {
   const gameId = ownProps.match.params.gameId
 
-  firebase.ref(`/games/${gameId}/`).on('value', snap => {
-    dispatch(updateBoard(snap.val()))})
+  // firebase.ref(`/games/${gameId}/`).on('value', snap => {
+  //   console.log(snap.val())
+  //   // dispatch(updateBoard(snap.val()))
+  // })
 
     return {
     // getBoard: () => {
@@ -71,7 +73,7 @@ const mapDispatch = (dispatch, ownProps) => {
       const spaceDiv = document.getElementById(spaceId)
       spaceDiv.classList.add('selected')
 
-      firebase.ref(`/games/${gameId}/state/`).update({selectedSpace: space.id})
+      // firebase.ref(`/games/${gameId}/state/`).update({selectedSpace: space.id})
     },
   }
 }
