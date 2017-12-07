@@ -4,8 +4,8 @@ import history from '../history'
 // INITIAL STATE
 
 const defaultState = {
-  // id: '',
-  // field: {}
+  id: '',
+  spaces: []
 }
 
 // ACTION TYPES
@@ -38,9 +38,7 @@ export const buildField = (width, height) => dispatch => {
     }
   }
 
-  const pitch = {spaces}
-
-  axios.post(`/api/games/`, pitch)
+  axios.post(`/api/games/`, spaces)
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
@@ -64,12 +62,10 @@ export default function (state = defaultState, action) {
   switch (action.type) {
 
     case CREATE_GAME:
-      // return Object.assign({}, state, action.id)
-      return action.id
+      return Object.assign({}, state, {id: action.id})
 
     case UPDATE_FIELD:
-      // return Object.assign({}, state, action.field)
-      return action.field
+      return Object.assign({}, state, {spaces: action.field})
 
     case UPDATE_SCORE:
       return action.score

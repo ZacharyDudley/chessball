@@ -19,14 +19,14 @@ export const getPlayer = id => ({type: GET_PLAYER, id})
 
 // THUNK
 
-export const buildTeams = (teams) => dispatch => {
-  axios.post(`/api/teams`, teams)
-  .then(res => {
-    console.log(res.data)
-    dispatch(createTeams(res.data))
-  })
-  .catch(err => console.error(`Creating game unsuccessful`, err));
-}
+// export const buildTeams = (teams) => dispatch => {
+//   axios.post(`/api/teams`, teams)
+//   .then(res => {
+//     console.log(res.data)
+//     dispatch(createTeams(res.data))
+//   })
+//   .catch(err => console.error(`Creating game unsuccessful`, err));
+// }
 
 // export const getField = gameId => dispatch => {
 //   axios.get(`/api/games/${gameId}`)

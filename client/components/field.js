@@ -37,7 +37,7 @@ class Field extends Component {
 
 const mapState = (state, ownProps) => {
   return {
-    gameId: ownProps.match.params.gameId,
+    gameId: state.field.id,
     spaces: state.field.spaces,
   }
 }

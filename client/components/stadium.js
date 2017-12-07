@@ -5,7 +5,6 @@ import { buildField, buildTeams } from '../store'
 class Stadium extends Component {
 
   componentDidUpdate() {
-    // console.log(this.props)
     if (this.props.gameId) {
       this.props.history.push(`/${this.props.gameId}`)
     }
@@ -41,26 +40,27 @@ class Stadium extends Component {
 
     const teams = { teamA, teamB }
 
+    //TO CREATE THE TEAMS, I NEED TO GET THE BOARD ID AND ADD THAT TO THE ROUTE IN TEAM.ROUTER
+
     let sizeW = 12
     let sizeH = 7
 
     return (
-      <button onClick={() => handleCreateGame(sizeW, sizeH, teams)}>CREATE</button>
+      <button onClick={() => handleCreateGame(sizeW, sizeH)}>CREATE</button>
     )
   }
 }
 
 const mapState = (state) => {
   return {
-    gameId: state.field
+    gameId: state.field.id
   }
 }
 
 const mapDispatch = (dispatch, ownProps) => {
   // const { gameId } = ownProps
   return {
-    handleCreateGame: (sizeW, sizeH, teams) => {
-      dispatch(buildTeams(teams))
+    handleCreateGame: (sizeW, sizeH) => {
       dispatch(buildField(sizeW, sizeH))
       // console.log(ownProps)
       // ownProps.history.push(`/field/${this.props.gameId}`)
