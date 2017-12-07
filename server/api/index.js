@@ -4,7 +4,7 @@ var router = require('express').Router();
 module.exports = router;
 
 router.use('/games', require('./game.router'))
-// router.use('/game', require('./game.router'))
+router.use('/teams', require('./team.router'))
 
 // router.use('/stories', require('./stories/story.router'));
 

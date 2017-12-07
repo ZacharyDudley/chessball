@@ -1,56 +1,67 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { buildGame } from '../store'
-// import firebase from '../firebase'
+import { buildField, buildTeams } from '../store'
 
-const Stadium = props => {
-  const { handleCreateGame } = props
+class Stadium extends Component {
 
-  const spaces = []
-  var i = 0
-
-  for (var h = 0; h <= 7; h++) {
-    for (var w = 0; w <= 12; w++) {
-      spaces.push({
-        id: i++,
-        coords: [w, h],
-        hasBall: false,
-        hasPlayer: ''
-      })
+  componentDidUpdate() {
+    // console.log(this.props)
+    if (this.props.gameId) {
+      this.props.history.push(`/${this.props.gameId}`)
     }
   }
 
-  const state = {
-    selectedSpace: 0,
-    currentTeam: 1,
-    p1Moves: 0,
-    p2Moves: 0,
-    p1Goals: 0,
-    p2Goals: 0,
-    p1Shots: 0,
-    p2Shots: 0,
-    p1Saves: 0,
-    p2Saves: 0,
+  render () {
+    const { handleCreateGame } = this.props
+
+    // const state = {
+    //   ballIsAt: 0,
+    //   currentTeam: 1,
+    //   p1Moves: 0,
+    //   p2Moves: 0,
+    //   p1Goals: 0,
+    //   p2Goals: 0,
+    //   p1Shots: 0,
+    //   p2Shots: 0,
+    //   p1Saves: 0,
+    //   p2Saves: 0,
+    // }
+
+    const teamA = {
+      id: '',
+      name: '',
+      guys: []
+    }
+
+    const teamB = {
+      id: '',
+      name: '',
+      guys: []
+    }
+
+    const teams = { teamA, teamB }
+
+    let sizeW = 12
+    let sizeH = 7
+
+    return (
+      <button onClick={() => handleCreateGame(sizeW, sizeH, teams)}>CREATE</button>
+    )
   }
-
-  const game = { spaces, state }
-
-  return (
-    <button onClick={() => handleCreateGame(game)}>CREATE</button>
-  )
 }
 
 const mapState = (state) => {
   return {
-    gameId: state.game
+    gameId: state.field
   }
 }
 
 const mapDispatch = (dispatch, ownProps) => {
   // const { gameId } = ownProps
   return {
-    handleCreateGame: game => {
-      dispatch(buildGame(game))
+    handleCreateGame: (sizeW, sizeH, teams) => {
+      dispatch(buildTeams(teams))
+      dispatch(buildField(sizeW, sizeH))
       // console.log(ownProps)
       // ownProps.history.push(`/field/${this.props.gameId}`)
     }

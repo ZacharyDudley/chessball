@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
+import firebase from '../../server/firebase'
 import { getField } from '../store'
 
 import '../css/field.scss';
@@ -9,26 +9,22 @@ import '../css/field.scss';
 class Field extends Component {
 
   componentDidMount(){
-    getField()
-  }
-
-  componentWillReceiveProps(){
-
+    this.props.getBoard()
   }
 
   render() {
-    const { spaces, handleClick, state } = this.props
+    const { spaces, handleClick } = this.props
 
     return (
       <div className="field">
       {
+        // console.log(spaces)
         spaces && spaces.map(space => {
           return (<div
             className="space"
             key={space.id}
             id={`${space.coords[0]}, ${space.coords[1]}`}
             onClick={() => {
-              state &&
               handleClick(space)
             }}
           />)
@@ -42,25 +38,22 @@ class Field extends Component {
 const mapState = (state, ownProps) => {
   return {
     gameId: ownProps.match.params.gameId,
-    spaces: state.game.spaces,
-    state: state.game.state,
+    spaces: state.field.spaces,
   }
 }
 
 const mapDispatch = (dispatch, ownProps) => {
   const gameId = ownProps.match.params.gameId
 
-  // firebase.ref(`/games/${gameId}/`).on('value', snap => {
+  // firebase.ref(`/${gameId}/`).on('value', snap => {
   //   console.log(snap.val())
   //   // dispatch(updateBoard(snap.val()))
   // })
 
     return {
-    // getBoard: () => {
-    //   firebase.ref(`/games/${gameId}/`).on('value', snap => {
-    //     dispatch(updateBoard(snap.val()))
-    //   })
-    // },
+    getBoard: () => {
+      dispatch(getField(gameId))
+    },
     handleClick: (space) => {
       const selectedDivs = document.getElementsByClassName('selected')
       if (selectedDivs.length) {
