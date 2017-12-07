@@ -9,23 +9,22 @@ import '../css/field.scss';
 class Field extends Component {
 
   componentDidMount(){
-    // console.log(this.props)
     this.props.getBoard()
   }
 
   render() {
-    const { spaces, handleClick, state } = this.props
+    const { spaces, handleClick } = this.props
 
     return (
       <div className="field">
       {
+        // console.log(spaces)
         spaces && spaces.map(space => {
           return (<div
             className="space"
             key={space.id}
             id={`${space.coords[0]}, ${space.coords[1]}`}
             onClick={() => {
-              state &&
               handleClick(space)
             }}
           />)
@@ -39,8 +38,7 @@ class Field extends Component {
 const mapState = (state, ownProps) => {
   return {
     gameId: ownProps.match.params.gameId,
-    spaces: state.game.spaces,
-    state: state.game.state,
+    spaces: state.field.spaces,
   }
 }
 

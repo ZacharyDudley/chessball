@@ -4,71 +4,53 @@ import history from '../history'
 
 // ACTION TYPES
 
-const CREATE_GAME = 'CREATE_GAME'
-const UPDATE_FIELD = 'UPDATE_FIELD'
-const UPDATE_SCORE = 'UPDATE_SCORE'
+const UPDATE_BALL = 'UPDATE_BALL'
+const UPDATE_PLAYER = 'UPDATE_PLAYER'
 
 // INITIAL STATE
 
-const defaultBoard = {
-  // id: ''
+const defaultSpace = {
+  // ballIsAt: ''
 }
 
 // ACTION CREATORS
 
-export const createGame = id => ({type: CREATE_GAME, id})
-export const updateField = field => ({type: UPDATE_FIELD, field})
-export const updateScore = score => ({type: UPDATE_SCORE, score})
+const updateBall = space => ({type: UPDATE_BALL, space})
+const updatePlayer = player => ({type: UPDATE_PLAYER, player})
 
 // THUNK
 
-// export const createGame = board => dispatch => {
-//   firebase.ref('games').push(board)
-//     // .then(snap => ownProps.history.push(`/field/${snap.key}`))
-//     .then(snap => dispatch(setBoard(snap.value)))
-//     .catch(err => console.error('ERROR CREATING BOARD' + err))
+// export function setSpace (field) {
+//   firebase.ref('games').push(field)
+//     .then(snap => console.log(snap.value))
 // }
 
-// export const updateGame = (id) => dispatch => {
-//   firebase.ref(id).on('value', snap => {
-//     dispatch(updateBoard(snap.value))
-//   })
-// }
-export const buildGame = game => dispatch => {
-  axios.post(`/api/games/`, game)
-  .then(res => dispatch(createGame(res.data)))
-  .catch(err => console.error(`Creating game unsuccessful`, err));
+export const moveBall = (gameId, oldSpace, newSpace) => dispatch => {
+  axios.put(`/api/games/${gameId}`, newSpace)
+  .then(res => dispatch(updateBall(res.data)))
+  .catch(err => console.error(`Updating ball at ${oldSpace} unsuccessful`, err));
 }
 
-export const getField = gameId => dispatch => {
-  axios.get(`/api/games/${gameId}`)
-  .then(res => dispatch(updateField(res.data)))
-  .catch(err => console.error(`Creating game unsuccessful`, err));
+export const movePlayer = (gameId, playerId, oldSpace, newSpace) => dispatch => {
+  axios.put(`/api/games/${gameId}/${playerId}`, newSpace)
+  .then(res => dispatch(updatePlayer(res.data)))
+  .catch(err => console.error(`Updating player ${playerId} unsuccessful`, err));
 }
-
-export const countGoal = (gameId, teamId) => dispatch => {
-  axios.put(`/api/games/${gameId}`, teamId)
-  .then(res => dispatch(updateScore(res.data)))
-  .catch(err => console.error(`Updating score for ${teamId} unsuccessful`, err));
-}
-
-
 
 // REDUCER
 
-export default function (state = defaultBoard, action) {
+export default function (state = defaultSpace, action) {
   switch (action.type) {
 
-    case CREATE_GAME:
-      return action.id
+    case UPDATE_BALL:
+      return action.space
 
-    case UPDATE_FIELD:
-      return action.field
-
-    case UPDATE_SCORE:
-      return action.score
+    case UPDATE_PLAYER:
+      return action.player
 
     default:
       return state
   }
 }
+
+
