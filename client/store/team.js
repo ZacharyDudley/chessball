@@ -7,21 +7,24 @@ const defaultState = {}
 
 // ACTION TYPES
 
-const CREATE_TEAM = 'CREATE_TEAM'
+const CREATE_TEAMS = 'CREATE_TEAMS'
 const GET_PLAYER = 'GET_PLAYER'
 const MOVE_PLAYER = 'MOVE_PLAYER'
 
 // ACTION CREATORS
 
-export const createTeam = () => ({type: CREATE_TEAM})
+export const createTeams = () => ({type: CREATE_TEAMS})
 export const getPlayer = id => ({type: GET_PLAYER, id})
 // export const movePlayer = (id, moveTo) => ({type: MOVE_PLAYER, id, moveTo})
 
 // THUNK
 
-export const buildTeam = () => dispatch => {
-  axios.post(`/api/teams`)
-  .then(res => dispatch(createTeam(res.data)))
+export const buildTeams = (teams) => dispatch => {
+  axios.post(`/api/teams`, teams)
+  .then(res => {
+    console.log(res.data)
+    dispatch(createTeams(res.data))
+  })
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
 
@@ -43,7 +46,7 @@ export const buildTeam = () => dispatch => {
 export default function (state = defaultState, action) {
   switch (action.type) {
 
-    case CREATE_TEAM:
+    case CREATE_TEAMS:
       // return Object.assign({}, state, action.id)
       return action.id
 

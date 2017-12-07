@@ -12,8 +12,8 @@ router.get('/:playerId', function (req, res, next) {
   .catch(err => next(err))
 })
 
-router.post('/', function (req, res, next) {
-  firebase.ref('/').push(req.body)
+router.post('/:gameId', function (req, res, next) {
+  firebase.ref(`/${req.params.gameId}`).push(req.body)
   .then(snap => res.status(201).send(snap.key))
   .catch(err => next(err))
 })

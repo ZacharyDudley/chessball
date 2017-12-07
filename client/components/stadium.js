@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { buildField } from '../store'
+import { buildField, buildTeams } from '../store'
 
 class Stadium extends Component {
 
@@ -27,25 +27,25 @@ class Stadium extends Component {
     //   p2Saves: 0,
     // }
 
-    // const teamA = {
-    //   id: '',
-    //   name: '',
-    //   guys: []
-    // }
+    const teamA = {
+      id: '',
+      name: '',
+      guys: []
+    }
 
-    // const teamB = {
-    //   id: '',
-    //   name: '',
-    //   guys: []
-    // }
+    const teamB = {
+      id: '',
+      name: '',
+      guys: []
+    }
 
-    // const game = { spaces, state, teamA, teamB }
+    const teams = { teamA, teamB }
 
     let sizeW = 12
     let sizeH = 7
 
     return (
-      <button onClick={() => handleCreateGame(sizeW, sizeH)}>CREATE</button>
+      <button onClick={() => handleCreateGame(sizeW, sizeH, teams)}>CREATE</button>
     )
   }
 }
@@ -59,7 +59,8 @@ const mapState = (state) => {
 const mapDispatch = (dispatch, ownProps) => {
   // const { gameId } = ownProps
   return {
-    handleCreateGame: (sizeW, sizeH) => {
+    handleCreateGame: (sizeW, sizeH, teams) => {
+      dispatch(buildTeams(teams))
       dispatch(buildField(sizeW, sizeH))
       // console.log(ownProps)
       // ownProps.history.push(`/field/${this.props.gameId}`)
