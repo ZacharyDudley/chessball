@@ -12,9 +12,12 @@ router.get('/:teamId', function (req, res, next) {
   .catch(err => next(err))
 })
 
-router.post('/:teamId', function (req, res, next) {
-  firebase.ref(`/${req.params.gameId}/`).push(req.body)
-  .then(snap => res.status(201).send(snap.key))
+router.post('/:gameId', function (req, res, next) {
+  firebase.ref(`/${req.params.gameId}/`).push(team)
+  .then(snap => {
+    console.log(snap)
+    // res.status(201).send(snap.key)
+  })
   .catch(err => next(err))
 })
 

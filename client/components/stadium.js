@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { buildField, buildTeams } from '../store'
+import { buildField, buildTeams, buildTeam } from '../store'
 
 class Stadium extends Component {
 
   componentDidUpdate() {
     if (this.props.gameId) {
-      this.props.history.push(`/${this.props.gameId}`)
+      this.props.teams(this.props.gameId)
+      this.props.history.push(`/game/${this.props.gameId}`)
     }
   }
 
@@ -46,11 +47,14 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch, ownProps) => {
   // const { gameId } = ownProps
+
   return {
     handleCreateGame: (sizeW, sizeH) => {
       dispatch(buildField(sizeW, sizeH))
-      // console.log(ownProps)
       // ownProps.history.push(`/field/${this.props.gameId}`)
+    },
+    teams: (gameId) => {
+      dispatch(buildTeam(gameId))
     }
     // buildGame(){
     //   const spaces = []

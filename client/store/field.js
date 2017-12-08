@@ -17,7 +17,7 @@ const UPDATE_SCORE = 'UPDATE_SCORE'
 // ACTION CREATORS
 
 export const createGame = (id) => ({type: CREATE_GAME, id})
-export const findField = (field, ballLoc) => ({type: FIND_FIELD, field, ballLoc})
+export const findField = (field) => ({type: FIND_FIELD, field})
 export const updateScore = score => ({type: UPDATE_SCORE, score})
 
 // THUNK
@@ -55,19 +55,19 @@ export const buildField = (width, height) => dispatch => {
     }
   }
 
-  axios.post(`/api/games/`, {spaces, ballLocation})
+  axios.post(`/api/game/`, {spaces, ballLocation})
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
 
 export const getField = gameId => dispatch => {
-  axios.get(`/api/games/${gameId}`)
+  axios.get(`/api/game/${gameId}`)
   .then(res => dispatch(findField(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
 
 export const countGoal = (gameId, teamId) => dispatch => {
-  axios.put(`/api/games/${gameId}`, teamId)
+  axios.put(`/api/game/${gameId}`, teamId)
   .then(res => dispatch(updateScore(res.data)))
   .catch(err => console.error(`Updating score for ${teamId} unsuccessful`, err));
 }

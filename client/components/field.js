@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import firebase from '../../server/firebase'
-import { getField } from '../store'
+import { getField, buildTeam } from '../store'
 
 import '../css/field.scss';
 
@@ -54,6 +54,9 @@ const mapDispatch = (dispatch, ownProps) => {
     return {
     getBoard: () => {
       dispatch(getField(gameId))
+    },
+    makeTeams: () => {
+      dispatch(buildTeam(gameId))
     },
     handleClick: (space) => {
       const selectedDivs = document.getElementsByClassName('selected')

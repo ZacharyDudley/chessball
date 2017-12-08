@@ -22,8 +22,24 @@ export const getPlayer = id => ({type: GET_PLAYER, id})
 
 // THUNK
 
-export const buildTeam = (gameId, team) => dispatch => {
-  axios.post(`/api/teams`, team)
+export const buildTeam = (gameId) => dispatch => {
+  let i = 0
+  const guys = []
+
+
+  const team = {
+    name: '',
+    guys: [
+      {loc: ''},
+      {loc: ''},
+      {loc: ''},
+      {loc: ''},
+      {loc: ''},
+      {loc: ''}
+    ]
+  }
+
+  axios.post(`/api/team/${gameId}`)
   .then(res => {
     console.log(res.data)
     dispatch(createTeam(res.data))

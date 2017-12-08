@@ -22,8 +22,8 @@ class Routes extends Component {
       <Router history={history}>
         <Main>
           <Switch>
-            <Route path="/game" component={Stadium} />
-            <Route path="/:gameId" component={Field} />
+            <Route exact path="/game" component={Stadium} />
+            <Route path="/game/:gameId" component={Field} />
             <Route path="/space" component={Space} />
             <Route path="/practice" component={Game} />
           </Switch>
