@@ -4,13 +4,13 @@ import history from '../history'
 
 // ACTION TYPES
 
+const GET_BALL = 'GET_BALL'
 const UPDATE_BALL = 'UPDATE_BALL'
 const UPDATE_PLAYER = 'UPDATE_PLAYER'
 
 // INITIAL STATE
 
 const defaultSpace = {
-  ballIsAt: '',
   currentTeam: 1,
   p1Moves: 0,
   p2Moves: 0,
@@ -24,6 +24,7 @@ const defaultSpace = {
 
 // ACTION CREATORS
 
+const getBall = id => ({type: GET_BALL, id})
 const updateBall = space => ({type: UPDATE_BALL, space})
 const updatePlayer = player => ({type: UPDATE_PLAYER, player})
 
@@ -51,8 +52,11 @@ export const movePlayer = (gameId, playerId, oldSpace, newSpace) => dispatch => 
 export default function (state = defaultSpace, action) {
   switch (action.type) {
 
+    case GET_BALL:
+      return Object.assign({}, state, {ballIsAt: action.id})
+
     case UPDATE_BALL:
-      return action.space
+      return Object.assign({}, state, {ballIsAt: action.id})
 
     case UPDATE_PLAYER:
       return action.player

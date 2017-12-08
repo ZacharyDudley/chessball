@@ -22,7 +22,8 @@ class Field extends Component {
           return (<div
             className={space.hasBall ? 'space hasball' : 'space' }
             key={space.id}
-            id={`${space.coords[0]}, ${space.coords[1]}`}
+            id={space.id}
+            coords={`${space.coords[0]}, ${space.coords[1]}`}
             onClick={() => {
               handleClick(space)
             }

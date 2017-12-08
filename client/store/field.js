@@ -16,8 +16,8 @@ const UPDATE_SCORE = 'UPDATE_SCORE'
 
 // ACTION CREATORS
 
-export const createGame = id => ({type: CREATE_GAME, id})
-export const updateField = field => ({type: UPDATE_FIELD, field})
+export const createGame = (id) => ({type: CREATE_GAME, id})
+export const updateField = (field, ballLoc) => ({type: UPDATE_FIELD, field, ballLoc})
 export const updateScore = score => ({type: UPDATE_SCORE, score})
 
 // THUNK
@@ -30,11 +30,14 @@ export const buildField = (width, height) => dispatch => {
   if (height % 2 !== 0) midHeight += 1
 
   const spaces = []
+  let ballLocation
   var i = 0
 
   for (var h = 0; h <= height; h++) {
     for (var w = 0; w <= width; w++) {
       if (w === midWidth && h === midHeight) {
+        ballLocation = i
+
         spaces.push({
           id: i++,
           coords: [w, h],
@@ -52,7 +55,7 @@ export const buildField = (width, height) => dispatch => {
     }
   }
 
-  axios.post(`/api/games/`, spaces)
+  axios.post(`/api/games/`, {spaces, ballLocation})
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
@@ -76,10 +79,11 @@ export default function (state = defaultState, action) {
   switch (action.type) {
 
     case CREATE_GAME:
+    console.log(action)
       return Object.assign({}, state, {id: action.id})
 
     case UPDATE_FIELD:
-      return Object.assign({}, state, {spaces: action.field})
+      return Object.assign({}, state, action.field)
 
     case UPDATE_SCORE:
       return action.score
