@@ -13,19 +13,6 @@ class Stadium extends Component {
   render () {
     const { handleCreateGame } = this.props
 
-    // const state = {
-    //   ballIsAt: 0,
-    //   currentTeam: 1,
-    //   p1Moves: 0,
-    //   p2Moves: 0,
-    //   p1Goals: 0,
-    //   p2Goals: 0,
-    //   p1Shots: 0,
-    //   p2Shots: 0,
-    //   p1Saves: 0,
-    //   p2Saves: 0,
-    // }
-
     const teamA = {
       id: '',
       name: '',
@@ -43,7 +30,7 @@ class Stadium extends Component {
     //TO CREATE THE TEAMS, I NEED TO GET THE BOARD ID AND ADD THAT TO THE ROUTE IN TEAM.ROUTER
 
     let sizeW = 12
-    let sizeH = 7
+    let sizeH = 8
 
     return (
       <button onClick={() => handleCreateGame(sizeW, sizeH)}>CREATE</button>

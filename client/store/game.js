@@ -10,7 +10,16 @@ const UPDATE_PLAYER = 'UPDATE_PLAYER'
 // INITIAL STATE
 
 const defaultSpace = {
-  // ballIsAt: ''
+  ballIsAt: '',
+  currentTeam: 1,
+  p1Moves: 0,
+  p2Moves: 0,
+  p1Goals: 0,
+  p2Goals: 0,
+  p1Shots: 0,
+  p2Shots: 0,
+  p1Saves: 0,
+  p2Saves: 0,
 }
 
 // ACTION CREATORS

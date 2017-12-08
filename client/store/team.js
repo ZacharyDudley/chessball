@@ -3,30 +3,33 @@ import history from '../history'
 
 // INITIAL STATE
 
-const defaultState = {}
+const defaultState = {
+  // teamA: {},
+  // teamB: {}
+}
 
 // ACTION TYPES
 
-const CREATE_TEAMS = 'CREATE_TEAMS'
+const CREATE_TEAM = 'CREATE_TEAM'
 const GET_PLAYER = 'GET_PLAYER'
 const MOVE_PLAYER = 'MOVE_PLAYER'
 
 // ACTION CREATORS
 
-export const createTeams = () => ({type: CREATE_TEAMS})
+export const createTeam = () => ({type: CREATE_TEAM})
 export const getPlayer = id => ({type: GET_PLAYER, id})
 // export const movePlayer = (id, moveTo) => ({type: MOVE_PLAYER, id, moveTo})
 
 // THUNK
 
-// export const buildTeams = (teams) => dispatch => {
-//   axios.post(`/api/teams`, teams)
-//   .then(res => {
-//     console.log(res.data)
-//     dispatch(createTeams(res.data))
-//   })
-//   .catch(err => console.error(`Creating game unsuccessful`, err));
-// }
+export const buildTeam = (gameId, team) => dispatch => {
+  axios.post(`/api/teams`, team)
+  .then(res => {
+    console.log(res.data)
+    dispatch(createTeam(res.data))
+  })
+  .catch(err => console.error(`Creating game unsuccessful`, err));
+}
 
 // export const getField = gameId => dispatch => {
 //   axios.get(`/api/games/${gameId}`)
@@ -46,7 +49,7 @@ export const getPlayer = id => ({type: GET_PLAYER, id})
 export default function (state = defaultState, action) {
   switch (action.type) {
 
-    case CREATE_TEAMS:
+    case CREATE_TEAM:
       // return Object.assign({}, state, action.id)
       return action.id
 

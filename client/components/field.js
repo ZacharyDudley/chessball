@@ -18,7 +18,6 @@ class Field extends Component {
     return (
       <div className="field">
       {
-        // console.log(spaces)
         spaces && spaces.map(space => {
           return (<div
             className="space"
