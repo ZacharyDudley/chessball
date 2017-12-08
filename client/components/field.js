@@ -20,7 +20,7 @@ class Field extends Component {
       {
         spaces && spaces.map(space => {
           return (<div
-            className={space.hasBall ? 'space hasball' : 'space' }
+            className={space.hasBall ? 'space ball' : 'space' }
             key={space.id}
             id={space.id}
             coords={`${space.coords[0]}, ${space.coords[1]}`}
@@ -63,11 +63,8 @@ const mapDispatch = (dispatch, ownProps) => {
         })
       }
 
-      const spaceId = `${space.coords[0]}, ${space.coords[1]}`
-      const spaceDiv = document.getElementById(spaceId)
+      const spaceDiv = document.getElementById(space.id)
       spaceDiv.classList.add('selected')
-
-      // firebase.ref(`/games/${gameId}/state/`).update({selectedSpace: space.id})
     },
   }
 }

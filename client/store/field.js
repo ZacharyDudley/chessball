@@ -11,13 +11,13 @@ const defaultState = {
 // ACTION TYPES
 
 const CREATE_GAME = 'CREATE_GAME'
-const UPDATE_FIELD = 'UPDATE_FIELD'
+const FIND_FIELD = 'FIND_FIELD'
 const UPDATE_SCORE = 'UPDATE_SCORE'
 
 // ACTION CREATORS
 
 export const createGame = (id) => ({type: CREATE_GAME, id})
-export const updateField = (field, ballLoc) => ({type: UPDATE_FIELD, field, ballLoc})
+export const findField = (field, ballLoc) => ({type: FIND_FIELD, field, ballLoc})
 export const updateScore = score => ({type: UPDATE_SCORE, score})
 
 // THUNK
@@ -62,7 +62,7 @@ export const buildField = (width, height) => dispatch => {
 
 export const getField = gameId => dispatch => {
   axios.get(`/api/games/${gameId}`)
-  .then(res => dispatch(updateField(res.data)))
+  .then(res => dispatch(findField(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
 
@@ -79,10 +79,9 @@ export default function (state = defaultState, action) {
   switch (action.type) {
 
     case CREATE_GAME:
-    console.log(action)
       return Object.assign({}, state, {id: action.id})
 
-    case UPDATE_FIELD:
+    case FIND_FIELD:
       return Object.assign({}, state, action.field)
 
     case UPDATE_SCORE:
