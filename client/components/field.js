@@ -20,12 +20,13 @@ class Field extends Component {
       {
         spaces && spaces.map(space => {
           return (<div
-            className="space"
+            className={space.hasBall ? 'space hasball' : 'space' }
             key={space.id}
             id={`${space.coords[0]}, ${space.coords[1]}`}
             onClick={() => {
               handleClick(space)
-            }}
+            }
+          }
           />)
         })
       }

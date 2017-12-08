@@ -23,18 +23,32 @@ export const updateScore = score => ({type: UPDATE_SCORE, score})
 // THUNK
 
 export const buildField = (width, height) => dispatch => {
+  let midWidth = width / 2
+  let midHeight = height / 2
+
+  if (width % 2 !== 0) midWidth += 1
+  if (height % 2 !== 0) midHeight += 1
 
   const spaces = []
   var i = 0
 
   for (var h = 0; h <= height; h++) {
     for (var w = 0; w <= width; w++) {
-      spaces.push({
-        id: i++,
-        coords: [w, h],
-        hasBall: false,
-        hasPlayer: ''
-      })
+      if (w === midWidth && h === midHeight) {
+        spaces.push({
+          id: i++,
+          coords: [w, h],
+          hasBall: true,
+          hasPlayer: ''
+        })
+      } else {
+        spaces.push({
+          id: i++,
+          coords: [w, h],
+          hasBall: false,
+          hasPlayer: ''
+        })
+      }
     }
   }
 

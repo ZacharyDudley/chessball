@@ -15,15 +15,21 @@
   border-width: 0.1rem;
   border-color: black;
 
-  .hasBall {
-    background: rgb(43, 54, 47);
-  }
+  // &.hasBall {
+  //   background: rgb(43, 54, 47);
+  // }
+}
 
-
+.hasBall {
+  background: #ff8c00;
 }
 
 .selected {
   background: rgb(117, 14, 14);
+
+  // &:hover {
+  //   background: rgb(105, 240, 154);
+  // }
 }
 
 .space:hover {
