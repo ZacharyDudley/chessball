@@ -4,54 +4,51 @@ import history from '../history'
 // INITIAL STATE
 
 const defaultState = {
-  // teamA: {},
-  // teamB: {}
+  id: '',
+  guys: []
 }
 
 // ACTION TYPES
 
 const CREATE_TEAM = 'CREATE_TEAM'
-const GET_PLAYER = 'GET_PLAYER'
+const UPDATE_TEAM = 'UPDATE_TEAM'
 const MOVE_PLAYER = 'MOVE_PLAYER'
 
 // ACTION CREATORS
 
-export const createTeam = () => ({type: CREATE_TEAM})
-export const getPlayer = id => ({type: GET_PLAYER, id})
+export const createTeam = id => ({type: CREATE_TEAM, id})
+export const updateTeam = team => ({type: UPDATE_TEAM, team})
 // export const movePlayer = (id, moveTo) => ({type: MOVE_PLAYER, id, moveTo})
 
 // THUNK
 
-export const buildTeam = (gameId) => dispatch => {
+export const buildTeam = (gameId, teamSize) => dispatch => {
   let i = 0
   const guys = []
 
+  while (i < teamSize) {
+    guys.push({
+      id: i,
+      loc: ''
+    })
+    i++
+  }
 
   const team = {
     name: '',
-    guys: [
-      {loc: ''},
-      {loc: ''},
-      {loc: ''},
-      {loc: ''},
-      {loc: ''},
-      {loc: ''}
-    ]
+    guys
   }
 
-  axios.post(`/api/team/${gameId}`)
-  .then(res => {
-    console.log(res.data)
-    dispatch(createTeam(res.data))
-  })
+  axios.post(`/api/team/${gameId}`, team)
+  .then(res => dispatch(createTeam(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
 
-// export const getField = gameId => dispatch => {
-//   axios.get(`/api/games/${gameId}`)
-//   .then(res => dispatch(updateField(res.data)))
-//   .catch(err => console.error(`Creating game unsuccessful`, err));
-// }
+export const getTeam = (gameId, teamId) => dispatch => {
+  axios.get(`/api/team/${gameId}/${teamId}`)
+  .then(res => dispatch(updateTeam(res.data)))
+  .catch(err => console.error(`Creating game unsuccessful`, err));
+}
 
 // export const countGoal = (gameId, teamId) => dispatch => {
 //   axios.put(`/api/games/${gameId}`, teamId)
@@ -66,12 +63,10 @@ export default function (state = defaultState, action) {
   switch (action.type) {
 
     case CREATE_TEAM:
-      // return Object.assign({}, state, action.id)
-      return action.id
+      return Object.assign({}, state, {id: action.id})
 
-    case GET_PLAYER:
-      // return Object.assign({}, state, action.field)
-      return action.id
+    case UPDATE_TEAM:
+      return Object.assign({}, state, action.team)
 
     // case MOVE_PLAYER:
     //   return action.score

@@ -6,18 +6,15 @@ const router = require('express').Router()
 // var User = require('./user.model');
 // var Story = require('../stories/story.model');
 
-router.get('/:teamId', function (req, res, next) {
-  firebase.ref(`/${req.params.gameId}/${req.params.teamId}`).once('value')
+router.get('/:gameId/:teamId', function (req, res, next) {
+  firebase.ref(`/${req.params.gameId}/${req.params.teamId}/`).once('value')
   .then(snap => res.status(200).send(snap.val()))
   .catch(err => next(err))
 })
 
 router.post('/:gameId', function (req, res, next) {
-  firebase.ref(`/${req.params.gameId}/`).push(team)
-  .then(snap => {
-    console.log(snap)
-    // res.status(201).send(snap.key)
-  })
+  firebase.ref(`/${req.params.gameId}/`).push(req.body)
+  .then(snap => res.status(201).send(snap.key))
   .catch(err => next(err))
 })
 

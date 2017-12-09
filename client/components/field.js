@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import firebase from '../../server/firebase'
-import { getField, buildTeam } from '../store'
+import { getField, getTeam } from '../store'
 
 import '../css/field.scss';
 
@@ -9,7 +9,9 @@ import '../css/field.scss';
 class Field extends Component {
 
   componentDidMount(){
-    this.props.getBoard()
+    const { getBoard } = this.props
+    console.log(this.props.state)
+    getBoard()
   }
 
   render() {
@@ -40,6 +42,7 @@ const mapState = (state, ownProps) => {
   return {
     gameId: state.field.id,
     spaces: state.field.spaces,
+    teamId: state.team
   }
 }
 
@@ -52,11 +55,9 @@ const mapDispatch = (dispatch, ownProps) => {
   // })
 
     return {
-    getBoard: () => {
+    getBoard: (teamId) => {
       dispatch(getField(gameId))
-    },
-    makeTeams: () => {
-      dispatch(buildTeam(gameId))
+      dispatch(getTeam(gameId, teamId))
     },
     handleClick: (space) => {
       const selectedDivs = document.getElementsByClassName('selected')

@@ -6,7 +6,7 @@ class Stadium extends Component {
 
   componentDidUpdate() {
     if (this.props.gameId) {
-      this.props.teams(this.props.gameId)
+      this.props.teams(this.props.gameId, 6)
       this.props.history.push(`/game/${this.props.gameId}`)
     }
   }
@@ -53,8 +53,9 @@ const mapDispatch = (dispatch, ownProps) => {
       dispatch(buildField(sizeW, sizeH))
       // ownProps.history.push(`/field/${this.props.gameId}`)
     },
-    teams: (gameId) => {
-      dispatch(buildTeam(gameId))
+    teams: (gameId, teamSize) => {
+      dispatch(buildTeam(gameId, teamSize))
+      // dispatch(buildTeam(gameId, teamSize))
     }
     // buildGame(){
     //   const spaces = []
