@@ -23,21 +23,55 @@ export const updateTeam = team => ({type: UPDATE_TEAM, team})
 // THUNK
 
 export const buildTeam = (gameId, teamSize) => dispatch => {
-  let i = 0
-  const guys = []
+  // let i = 0
+  // const guys = []
+  // while (i < teamSize) {
+  //   guys.push({
+  //     id: i,
+  //     loc: ''
+  //   })
+  //   i++
+  // }
+  // const team = {
+  //   name: '',
+  //   guys
+  // }
 
-  while (i < teamSize) {
-    guys.push({
-      id: i,
-      loc: ''
-    })
-    i++
-  }
-
-  const team = {
-    name: '',
-    guys
-  }
+  // const team = {
+  //   name: 'Home',
+  //   guys: [
+  //     {
+  //       id: 0,
+  //       name: 'Left Back',
+  //       loc: `${x / 12}, ${y / 3}`
+  //     },
+  //     {
+  //       id: 1,
+  //       name: 'Right Back',
+  //       loc: `${x / 12}, ${(y / 3) * 2}`
+  //     },
+  //     {
+  //       id: 2,
+  //       name: 'Midfielder',
+  //       loc: `${x / 4}, ${y / 2}`
+  //     },
+  //     {
+  //       id: 3,
+  //       name: 'Left Forward',
+  //       loc: `${(x / 2) - 1}, ${1}`
+  //     },
+  //     {
+  //       id: 4,
+  //       name: 'Striker',
+  //       loc: `${(x / 2) - 1}, ${y / 2}`
+  //     },
+  //     {
+  //       id: 5,
+  //       name: 'Right Forward',
+  //       loc: `${(x / 2) - 1}, ${(y / 3) * 2}`
+  //     },
+  //   ]
+  // }
 
   axios.post(`/api/team/${gameId}`, team)
   .then(res => dispatch(createTeam(res.data)))
