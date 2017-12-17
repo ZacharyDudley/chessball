@@ -55,7 +55,44 @@ export const buildField = (width, height) => dispatch => {
     }
   }
 
-  axios.post(`/api/game/`, {spaces, ballLocation})
+  const team = {
+    name: 'Home',
+    guys: [
+      {
+        id: 0,
+        name: 'Left Back',
+        loc: `${w / 12}, ${h / 3}`
+      },
+      {
+        id: 1,
+        name: 'Right Back',
+        loc: `${w / 12}, ${(h / 3) * 2}`
+      },
+      {
+        id: 2,
+        name: 'Midfielder',
+        loc: `${w / 4}, ${h / 2}`
+      },
+      {
+        id: 3,
+        name: 'Left Forward',
+        loc: `${(w / 2) - 1}, ${1}`
+      },
+      {
+        id: 4,
+        name: 'Striker',
+        loc: `${(w / 2) - 1}, ${h / 2}`
+      },
+      {
+        id: 5,
+        name: 'Right Forward',
+        loc: `${(w / 2) - 1}, ${(h / 3) * 2}`
+      },
+    ]
+  }
+
+
+  axios.post(`/api/game/`, {spaces, ballLocation, team})
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }

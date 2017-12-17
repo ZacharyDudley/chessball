@@ -6,7 +6,7 @@ class Stadium extends Component {
 
   componentDidUpdate() {
     if (this.props.gameId) {
-      this.props.teams(this.props.gameId, 6)
+      // this.props.teams(this.props.gameId, 6)
       this.props.history.push(`/game/${this.props.gameId}`)
     }
   }

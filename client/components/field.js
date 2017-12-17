@@ -57,7 +57,7 @@ const mapDispatch = (dispatch, ownProps) => {
     return {
     getBoard: (teamId) => {
       dispatch(getField(gameId))
-      dispatch(getTeam(gameId, teamId))
+      // dispatch(getTeam(gameId, teamId))
     },
     handleClick: (space) => {
       const selectedDivs = document.getElementsByClassName('selected')

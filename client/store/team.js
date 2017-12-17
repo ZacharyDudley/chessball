@@ -4,8 +4,8 @@ import history from '../history'
 // INITIAL STATE
 
 const defaultState = {
-  id: '',
-  guys: []
+  // id: '',
+  // guys: []
 }
 
 // ACTION TYPES
