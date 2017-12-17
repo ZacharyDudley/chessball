@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import firebase from '../../server/firebase'
-import { getField, getTeam } from '../store'
+import { getField } from '../store'
 
 import '../css/field.scss';
 
 
 class Field extends Component {
+  constructor() {
+    super()
+    this.state = {
+      selectedPlayerSpace: ''
+    }
+    this.handleClick = this.handleClick.bind(this)
+    this.getNeighbors = this.getNeighbors.bind(this)
+  }
 
   componentDidMount(){
     const { getBoard } = this.props
-    console.log(this.props.state)
+    // console.log(this.props.state)
     getBoard()
   }
 
@@ -18,8 +26,52 @@ class Field extends Component {
 
   }
 
+  getNeighbors(space) {
+    const [x, y] = space.coords
+
+    const neighbors = [
+      [x - 1, y - 1],
+      [x, y - 1],
+      [x + 1, y - 1],
+      [x - 1, y],
+      [x + 1, y],
+      [x - 1, y + 1],
+      [x, y + 1],
+      [x + 1, y + 1]
+    ]
+  }
+
+  handleClick(space) {
+    const selectedDivs = document.getElementsByClassName('selected')
+    const spaceDiv = document.getElementById(space.id)
+
+    if (spaceDiv.classList.contains('player') && spaceDiv.classList.contains('selected')) {
+      this.setState({selectedPlayerSpace: space})
+    }
+
+    // if (this.state.selectedPlayerSpace && )
+
+    // if (selectedDivs.length) {
+    //   Array.prototype.filter.call(selectedDivs, div => {
+    //     div.classList.remove('selected')
+    //   })
+    // }
+
+    while (selectedDivs.length) {
+      selectedDivs[0].classList.remove('selected')
+    }
+
+    if (spaceDiv.classList.contains('selected')) {
+      console.log('CLICKED')
+      spaceDiv.classList.remove('selected')
+    }
+
+    spaceDiv.classList.add('selected')
+  }
+
+
   render() {
-    const { spaces, handleClick } = this.props
+    const { spaces } = this.props
 
     return (
       <div className="field">
@@ -34,7 +86,7 @@ class Field extends Component {
             id={space.id}
             coords={`${space.coords[0]}, ${space.coords[1]}`}
             onClick={() => {
-              handleClick(space)
+              this.handleClick(space)
             }
           }
           />)
@@ -62,21 +114,39 @@ const mapDispatch = (dispatch, ownProps) => {
   // })
 
     return {
-    getBoard: (teamId) => {
+    getBoard: () => {
       dispatch(getField(gameId))
-      // dispatch(getTeam(gameId, teamId))
     },
-    handleClick: (space) => {
-      const selectedDivs = document.getElementsByClassName('selected')
-      if (selectedDivs.length) {
-        Array.prototype.filter.call(selectedDivs, div => {
-          div.classList.remove('selected')
-        })
-      }
+    // handleClick: (space) => {
+    //   const selectedDivs = document.getElementsByClassName('selected')
+    //   const spaceDiv = document.getElementById(space.id)
 
-      const spaceDiv = document.getElementById(space.id)
-      spaceDiv.classList.add('selected')
-    },
+    //   if (spaceDiv.classList.contains('player') && spaceDiv.classList.contains('selected')) {
+    //     // this.setState({selectedPlayerSpace: space})
+    //     console.log(this.state.selectedPlayerSpace)
+    //   }
+
+    //   // if (selectedDivs.length) {
+    //   //   Array.prototype.filter.call(selectedDivs, div => {
+    //   //     div.classList.remove('selected')
+    //   //   })
+    //   // }
+
+    //   while (selectedDivs.length) {
+    //     selectedDivs[0].classList.remove('selected')
+    //   }
+
+    //   if (spaceDiv.classList.contains('selected')) {
+    //     console.log('CLICKED')
+    //     spaceDiv.classList.remove('selected')
+    //   }
+
+    //   spaceDiv.classList.add('selected')
+
+    // },
+    movePlayer: (oldSpace, newSpace) => {
+
+    }
   }
 }
 
