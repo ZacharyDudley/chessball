@@ -29,6 +29,42 @@ export const buildField = (width, height) => dispatch => {
   if (width % 2 !== 0) midWidth += 1
   if (height % 2 !== 0) midHeight += 1
 
+  const team = {
+    name: 'Home',
+    guys: [
+      {
+        id: 0,
+        name: 'Left Back',
+        loc: `${Math.floor(width / 12)}, ${Math.floor(height / 3)}`
+      },
+      {
+        id: 1,
+        name: 'Right Back',
+        loc: `${Math.floor(width / 12)}, ${Math.floor((height / 3) * 2)}`
+      },
+      {
+        id: 2,
+        name: 'Midfielder',
+        loc: `${Math.floor(width / 4)}, ${Math.floor(height / 2)}`
+      },
+      {
+        id: 3,
+        name: 'Left Forward',
+        loc: `${Math.floor((width / 2) - 1)}, ${1}`
+      },
+      {
+        id: 4,
+        name: 'Striker',
+        loc: `${Math.floor((width / 2) - 1)}, ${Math.floor(height / 2)}`
+      },
+      {
+        id: 5,
+        name: 'Right Forward',
+        loc: `${Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2)}`
+      },
+    ]
+  }
+
   const spaces = []
   let ballLocation
   var i = 0
@@ -45,52 +81,30 @@ export const buildField = (width, height) => dispatch => {
           hasPlayer: ''
         })
       } else {
-        spaces.push({
-          id: i++,
-          coords: [w, h],
-          hasBall: false,
-          hasPlayer: ''
+        let player = team.guys.filter(guy => {
+          if (guy.loc === `${w}, ${h}`) {
+            return guy
+          }
         })
+
+        if (player.length) {
+          spaces.push({
+            id: i++,
+            coords: [w, h],
+            hasBall: false,
+            hasPlayer: `${player[0].id}`
+          })
+        } else {
+          spaces.push({
+            id: i++,
+            coords: [w, h],
+            hasBall: false,
+            hasPlayer: ''
+          })
+        }
       }
     }
   }
-
-  const team = {
-    name: 'Home',
-    guys: [
-      {
-        id: 0,
-        name: 'Left Back',
-        loc: `${w / 12}, ${h / 3}`
-      },
-      {
-        id: 1,
-        name: 'Right Back',
-        loc: `${w / 12}, ${(h / 3) * 2}`
-      },
-      {
-        id: 2,
-        name: 'Midfielder',
-        loc: `${w / 4}, ${h / 2}`
-      },
-      {
-        id: 3,
-        name: 'Left Forward',
-        loc: `${(w / 2) - 1}, ${1}`
-      },
-      {
-        id: 4,
-        name: 'Striker',
-        loc: `${(w / 2) - 1}, ${h / 2}`
-      },
-      {
-        id: 5,
-        name: 'Right Forward',
-        loc: `${(w / 2) - 1}, ${(h / 3) * 2}`
-      },
-    ]
-  }
-
 
   axios.post(`/api/game/`, {spaces, ballLocation, team})
   .then(res => dispatch(createGame(res.data)))
