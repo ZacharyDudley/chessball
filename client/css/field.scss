@@ -15,18 +15,23 @@
   border-width: 0.1rem;
   border-color: black;
 
-  .hasBall {
-    background: rgb(43, 54, 47);
+  &:hover {
+    background: rgb(105, 240, 154);
   }
 
+  &.selected {
+    background: #42c3a3;
+  }
 
+  &.ball {
+    background: rgb(255, 255, 255);
+  }
+
+  &.teamA {
+    background: rgb(187, 0, 0);
+  }
+
+  &.teamB {
+    background: rgb(2, 0, 124);
+  }
 }
-
-.selected {
-  background: rgb(117, 14, 14);
-}
-
-.space:hover {
-  background: rgb(105, 240, 154);
-}
-

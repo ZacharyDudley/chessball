@@ -1,31 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { buildField, buildTeams } from '../store'
+import { buildField, buildTeams, buildTeam } from '../store'
 
 class Stadium extends Component {
 
   componentDidUpdate() {
-    // console.log(this.props)
     if (this.props.gameId) {
-      this.props.history.push(`/${this.props.gameId}`)
+      // this.props.teams(this.props.gameId, 6)
+      this.props.history.push(`/game/${this.props.gameId}`)
     }
   }
 
   render () {
     const { handleCreateGame } = this.props
-
-    // const state = {
-    //   ballIsAt: 0,
-    //   currentTeam: 1,
-    //   p1Moves: 0,
-    //   p2Moves: 0,
-    //   p1Goals: 0,
-    //   p2Goals: 0,
-    //   p1Shots: 0,
-    //   p2Shots: 0,
-    //   p1Saves: 0,
-    //   p2Saves: 0,
-    // }
 
     const teamA = {
       id: '',
@@ -41,29 +28,34 @@ class Stadium extends Component {
 
     const teams = { teamA, teamB }
 
+    //TO CREATE THE TEAMS, I NEED TO GET THE BOARD ID AND ADD THAT TO THE ROUTE IN TEAM.ROUTER
+
     let sizeW = 12
-    let sizeH = 7
+    let sizeH = 8
 
     return (
-      <button onClick={() => handleCreateGame(sizeW, sizeH, teams)}>CREATE</button>
+      <button onClick={() => handleCreateGame(sizeW, sizeH)}>CREATE</button>
     )
   }
 }
 
 const mapState = (state) => {
   return {
-    gameId: state.field
+    gameId: state.field.id
   }
 }
 
 const mapDispatch = (dispatch, ownProps) => {
   // const { gameId } = ownProps
+
   return {
-    handleCreateGame: (sizeW, sizeH, teams) => {
-      dispatch(buildTeams(teams))
+    handleCreateGame: (sizeW, sizeH) => {
       dispatch(buildField(sizeW, sizeH))
-      // console.log(ownProps)
       // ownProps.history.push(`/field/${this.props.gameId}`)
+    },
+    teams: (gameId, teamSize) => {
+      dispatch(buildTeam(gameId, teamSize))
+      // dispatch(buildTeam(gameId, teamSize))
     }
     // buildGame(){
     //   const spaces = []
