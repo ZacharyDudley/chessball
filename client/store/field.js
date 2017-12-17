@@ -40,7 +40,7 @@ export const buildField = (width, height) => dispatch => {
       {
         id: 1,
         name: 'Right Back',
-        loc: `${Math.floor(width / 12)}, ${Math.floor((height / 3) * 2)}`
+        loc: `${Math.floor(width / 12)}, ${Math.floor((height / 3) * 2) + 1}`
       },
       {
         id: 2,
@@ -60,7 +60,7 @@ export const buildField = (width, height) => dispatch => {
       {
         id: 5,
         name: 'Right Forward',
-        loc: `${Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2)}`
+        loc: `${Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2) + 1}`
       },
     ]
   }

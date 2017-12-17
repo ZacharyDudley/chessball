@@ -14,6 +14,10 @@ class Field extends Component {
     getBoard()
   }
 
+  componentWillReceiveProps(){
+
+  }
+
   render() {
     const { spaces, handleClick } = this.props
 
@@ -22,7 +26,10 @@ class Field extends Component {
       {
         spaces && spaces.map(space => {
           return (<div
-            className={space.hasBall ? 'space ball' : 'space' }
+            className={
+              space.hasBall ? 'space ball' :
+                space.hasPlayer ? 'space player' : 'space'
+            }
             key={space.id}
             id={space.id}
             coords={`${space.coords[0]}, ${space.coords[1]}`}

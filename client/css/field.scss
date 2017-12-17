@@ -20,18 +20,19 @@
   }
 
   &.selected {
-    background: #42c3a3;
+    border-color: rgb(255, 171, 69);
   }
 
   &.ball {
     background: rgb(255, 255, 255);
   }
 
+  &.player {
+    background: rgb(2, 0, 124);
+  }
+
   &.teamA {
     background: rgb(187, 0, 0);
   }
 
-  &.teamB {
-    background: rgb(2, 0, 124);
-  }
 }
