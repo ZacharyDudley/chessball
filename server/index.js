@@ -55,9 +55,9 @@ module.exports = app
   app.use(express.static(path.join(__dirname, '..', 'public')))
 
   // sends index.html
-  // app.use('*', (req, res) => {
-  //   res.sendFile(path.join(__dirname, '..', 'public/index.html'))
-  // })
+  app.use('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public/index.html'))
+  })
 
   // error handling endware
   app.use((err, req, res, next) => {

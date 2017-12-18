@@ -18,7 +18,6 @@ class Field extends Component {
 
   componentDidMount(){
     const { getBoard } = this.props
-    // console.log(this.props.state)
     getBoard()
   }
 
@@ -28,7 +27,7 @@ class Field extends Component {
 
   getNeighbors(space) {
     const [x, y] = space.coords
-
+//SET SPACE ID TO COORDS.
     const neighbors = [
       [x - 1, y - 1],
       [x, y - 1],
@@ -45,11 +44,15 @@ class Field extends Component {
     const selectedDivs = document.getElementsByClassName('selected')
     const spaceDiv = document.getElementById(space.id)
 
+    if (this.state.selectedPlayerSpace && this.state.selectedPlayerSpace.id === space.id) {
+      console.log('SECOND CLICK ON PLAYER SPACE')
+    }
+
+
     if (spaceDiv.classList.contains('player') && spaceDiv.classList.contains('selected')) {
       this.setState({selectedPlayerSpace: space})
     }
 
-    // if (this.state.selectedPlayerSpace && )
 
     // if (selectedDivs.length) {
     //   Array.prototype.filter.call(selectedDivs, div => {
