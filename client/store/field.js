@@ -67,16 +67,14 @@ export const buildField = (width, height) => dispatch => {
 
   const spaces = []
   let ballLocation
-  var i = 0
 
   for (var h = 0; h <= height; h++) {
     for (var w = 0; w <= width; w++) {
       if (w === midWidth && h === midHeight) {
-        ballLocation = i
+        ballLocation = `${w}, ${h}`
 
         spaces.push({
-          id: i++,
-          coords: [w, h],
+          id: `${w}, ${h}`,
           hasBall: true,
           hasPlayer: ''
         })
@@ -89,15 +87,13 @@ export const buildField = (width, height) => dispatch => {
 
         if (player.length) {
           spaces.push({
-            id: i++,
-            coords: [w, h],
+            id: `${w}, ${h}`,
             hasBall: false,
             hasPlayer: `${player[0].id}`
           })
         } else {
           spaces.push({
-            id: i++,
-            coords: [w, h],
+            id: `${w}, ${h}`,
             hasBall: false,
             hasPlayer: ''
           })

@@ -26,17 +26,19 @@ class Field extends Component {
   }
 
   getNeighbors(space) {
-    const [x, y] = space.coords
-//SET SPACE ID TO COORDS.
-    const neighbors = [
-      [x - 1, y - 1],
-      [x, y - 1],
-      [x + 1, y - 1],
-      [x - 1, y],
-      [x + 1, y],
-      [x - 1, y + 1],
-      [x, y + 1],
-      [x + 1, y + 1]
+    let [x, y] = space.id.split(', ')
+    x = +x
+    y = +y
+
+    return [
+      document.getElementById(`${x - 1}, ${y - 1}`) || undefined,
+      document.getElementById(`${x}, ${y - 1}`) || undefined,
+      document.getElementById(`${x + 1}, ${y - 1}`) || undefined,
+      document.getElementById(`${x - 1}, ${y}`) || undefined,
+      document.getElementById(`${x + 1}, ${y}`) || undefined,
+      document.getElementById(`${x - 1}, ${y + 1}`) || undefined,
+      document.getElementById(`${x}, ${y + 1}`) || undefined,
+      document.getElementById(`${x + 1}, ${y + 1}`) || undefined,
     ]
   }
 
@@ -44,14 +46,22 @@ class Field extends Component {
     const selectedDivs = document.getElementsByClassName('selected')
     const spaceDiv = document.getElementById(space.id)
 
-    if (this.state.selectedPlayerSpace && this.state.selectedPlayerSpace.id === space.id) {
-      console.log('SECOND CLICK ON PLAYER SPACE')
-    }
-
-
-    if (spaceDiv.classList.contains('player') && spaceDiv.classList.contains('selected')) {
+    if (spaceDiv.classList.contains('player')) {
       this.setState({selectedPlayerSpace: space})
     }
+
+    if (spaceDiv.classList.contains('player') && this.state.selectedPlayerSpace.id !== space.id) {
+      console.log('new neighbors')
+    }
+
+    if (this.state.selectedPlayerSpace.id === space.id) {
+      const neighbors = this.getNeighbors(space)
+      neighbors.forEach(neighborSpace => {
+        neighborSpace.classList.add('neighbor')
+      })
+    }
+
+
 
 
     // if (selectedDivs.length) {
@@ -87,7 +97,6 @@ class Field extends Component {
             }
             key={space.id}
             id={space.id}
-            coords={`${space.coords[0]}, ${space.coords[1]}`}
             onClick={() => {
               this.handleClick(space)
             }
