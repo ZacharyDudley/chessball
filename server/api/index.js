@@ -5,6 +5,7 @@ module.exports = router;
 
 router.use('/game', require('./field.router'))
 router.use('/team', require('./team.router'))
+router.use('/rules', require('./rules.router'))
 
 router.use((req, res, next) => {
   const error = new Error('Not Found')
