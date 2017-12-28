@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import firebase from '../../server/firebase'
+// import firebase from '../../server/firebase'
 import { getField, movePlayer } from '../store'
 
 import '../css/field.scss';
@@ -19,10 +19,6 @@ class Field extends Component {
   componentDidMount(){
     const { getBoard } = this.props
     getBoard()
-  }
-
-  componentWillReceiveProps(){
-
   }
 
   getNeighbors(spaceId, action) {
@@ -53,8 +49,15 @@ class Field extends Component {
   }
 
   handleClick(space) {
+    const { selectedSpace } = this.state
     const selectedDivs = document.getElementsByClassName('selected')
     const spaceDiv = document.getElementById(space.id)
+
+    // IF NEIGHBOR SPACE IS CLICKED
+    if (spaceDiv.classList.contains('neighbor')) {
+      console.log('neighbor')
+      this.props.playerAction(selectedSpace.hasPlayer, selectedSpace, space)
+    }
 
     // PLACE SELECTED CURSOR ON SPACE
     if (spaceDiv.classList.contains('selected')) {
@@ -63,17 +66,17 @@ class Field extends Component {
       while (selectedDivs.length) {
         selectedDivs[0].classList.remove('selected')
       }
-      if (this.state.selectedSpace) {
-        this.getNeighbors(this.state.selectedSpace.id, 'remove')
+      if (selectedSpace) {
+        this.getNeighbors(selectedSpace.id, 'remove')
       }
       spaceDiv.classList.add('selected')
     }
 
     // HIGHLIGHT NEIGHBORS WHEN PLAYER SPACES ARE CLICKED
     if (spaceDiv.classList.contains('player')) {
-      if (this.state.selectedSpace.id !== space.id) {
-        if (this.state.selectedSpace) {
-          this.getNeighbors(this.state.selectedSpace.id, 'remove')
+      if (selectedSpace.id !== space.id) {
+        if (selectedSpace) {
+          this.getNeighbors(selectedSpace.id, 'remove')
         }
         this.setState({selectedSpace: space})
         this.getNeighbors(space.id, 'add')
@@ -82,10 +85,6 @@ class Field extends Component {
       }
     }
 
-    // IF NEIGHBOR SPACE IS CLICKED
-    if (spaceDiv.classList.contains('neighbor')) {
-      console.log('neighbor')
-    }
 
 
     if (spaceDiv.classList.contains('ball')) {
@@ -141,17 +140,12 @@ const mapState = (state, ownProps) => {
 const mapDispatch = (dispatch, ownProps) => {
   const gameId = ownProps.match.params.gameId
 
-  // firebase.ref(`/${gameId}/`).on('value', snap => {
-  //   console.log(snap.val())
-  //   // dispatch(updateBoard(snap.val()))
-  // })
-
     return {
     getBoard: () => {
       dispatch(getField(gameId))
     },
-    playerAction: () => {
-      dispatch(movePlayer())
+    playerAction: (player, oldSpace, newSpace) => {
+      dispatch(movePlayer(gameId, player, oldSpace, newSpace))
     }
     // handleClick: (space) => {
     //   const selectedDivs = document.getElementsByClassName('selected')

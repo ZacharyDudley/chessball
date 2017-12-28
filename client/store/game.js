@@ -42,8 +42,11 @@ export const moveBall = (gameId, oldSpace, newSpace) => dispatch => {
 }
 
 export const movePlayer = (gameId, playerId, oldSpace, newSpace) => dispatch => {
-  axios.put(`/api/games/${gameId}/${playerId}`, newSpace)
-  .then(res => dispatch(updatePlayer(res.data)))
+  axios.put(`/api/rules/${gameId}`, newSpace)
+  .then(res => {
+    console.log('STORE', res)
+    // dispatch(updatePlayer(res.data))
+  })
   .catch(err => console.error(`Updating player ${playerId} unsuccessful`, err));
 }
 
