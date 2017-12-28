@@ -56,7 +56,7 @@ class Field extends Component {
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
       console.log('neighbor')
-      this.props.playerAction(selectedSpace.hasPlayer, selectedSpace, space)
+      this.props.playerAction(selectedSpace, space)
     }
 
     // PLACE SELECTED CURSOR ON SPACE
@@ -144,8 +144,8 @@ const mapDispatch = (dispatch, ownProps) => {
     getBoard: () => {
       dispatch(getField(gameId))
     },
-    playerAction: (player, oldSpace, newSpace) => {
-      dispatch(movePlayer(gameId, player, oldSpace, newSpace))
+    playerAction: (oldSpace, newSpace) => {
+      dispatch(movePlayer(gameId, oldSpace, newSpace))
     }
     // handleClick: (space) => {
     //   const selectedDivs = document.getElementsByClassName('selected')
