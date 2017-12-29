@@ -30,8 +30,8 @@ class Stadium extends Component {
 
     //TO CREATE THE TEAMS, I NEED TO GET THE BOARD ID AND ADD THAT TO THE ROUTE IN TEAM.ROUTER
 
-    let sizeW = 12
-    let sizeH = 8
+    let sizeW = 8
+    let sizeH = 12
 
     return (
       <button onClick={() => handleCreateGame(sizeW, sizeH)}>CREATE</button>

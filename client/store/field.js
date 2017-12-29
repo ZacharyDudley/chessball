@@ -5,7 +5,7 @@ import history from '../history'
 
 const defaultState = {
   id: '',
-  spaces: []
+  spaces: {}
 }
 
 // ACTION TYPES
@@ -65,38 +65,38 @@ export const buildField = (width, height) => dispatch => {
     ]
   }
 
-  const spaces = []
+  const spaces = {}
   let ballLocation
 
-  for (var h = 0; h <= height; h++) {
-    for (var w = 0; w <= width; w++) {
-      if (w === midWidth && h === midHeight) {
-        ballLocation = `${w}, ${h}`
+  for (var heightIndex = 0; heightIndex <= height; heightIndex++) {
+    for (var widthIndex = 0; widthIndex <= width; widthIndex++) {
+      if (widthIndex === midWidth && heightIndex === midHeight) {
+        ballLocation = `${widthIndex}, ${heightIndex}`
 
-        spaces.push({
-          id: `${w}, ${h}`,
+        spaces[`${widthIndex}, ${heightIndex}`] = {
+          id: `${widthIndex}, ${heightIndex}`,
           hasBall: true,
           hasPlayer: ''
-        })
+        }
       } else {
         let player = team.guys.filter(guy => {
-          if (guy.loc === `${w}, ${h}`) {
+          if (guy.loc === `${widthIndex}, ${heightIndex}`) {
             return guy
           }
         })
 
         if (player.length) {
-          spaces.push({
-            id: `${w}, ${h}`,
+          spaces[`${widthIndex}, ${heightIndex}`] = {
+            id: `${widthIndex}, ${heightIndex}`,
             hasBall: false,
             hasPlayer: `${player[0].id}`
-          })
+          }
         } else {
-          spaces.push({
-            id: `${w}, ${h}`,
+          spaces[`${widthIndex}, ${heightIndex}`] = {
+            id: `${widthIndex}, ${heightIndex}`,
             hasBall: false,
             hasPlayer: ''
-          })
+          }
         }
       }
     }

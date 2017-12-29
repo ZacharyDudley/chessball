@@ -109,20 +109,35 @@ class Field extends Component {
     return (
       <div className="field">
       {
-        spaces && spaces.map(space => {
+
+        spaces && Object.keys(spaces).map(coords => {
           return (<div
             className={
-              space.hasBall ? 'space ball' :
-                space.hasPlayer ? 'space player' : 'space'
+              spaces[coords].hasBall ? 'space ball' :
+              spaces[coords].hasPlayer ? 'space player' : 'space'
             }
-            key={space.id}
-            id={space.id}
+            key={spaces[coords].id}
+            id={spaces[coords].id}
             onClick={() => {
-              this.handleClick(space)
+              this.handleClick(spaces[coords])
             }
           }
           />)
         })
+        // spaces && spaces.map(space => {
+        //   return (<div
+        //     className={
+        //       space.hasBall ? 'space ball' :
+        //         space.hasPlayer ? 'space player' : 'space'
+        //     }
+        //     key={space.id}
+        //     id={space.id}
+        //     onClick={() => {
+        //       this.handleClick(space)
+        //     }
+        //   }
+        //   />)
+        // })
       }
       </div>
     )
