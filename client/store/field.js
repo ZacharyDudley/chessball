@@ -154,6 +154,13 @@ export const getField = gameId => dispatch => {
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
 
+export const movePlayer = (gameId, oldSpace, newSpace) => dispatch => {
+  axios.put(`/api/rules/${gameId}/movePlayer`, {oldSpace, newSpace})
+  .then(res => dispatch(getField(gameId)))
+  .catch(err => console.error(`Updating player ${playerId} unsuccessful`, err));
+}
+
+
 export const countGoal = (gameId, teamId) => dispatch => {
   axios.put(`/api/game/${gameId}`, teamId)
   .then(res => dispatch(updateScore(res.data)))
