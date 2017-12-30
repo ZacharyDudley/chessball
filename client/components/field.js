@@ -21,20 +21,30 @@ class Field extends Component {
     getBoard()
   }
 
-  getNeighbors(spaceId, action) {
-    let [x, y] = spaceId.split(', ')
-    x = +x
-    y = +y
+  getNeighbors(spaceCoords, action) {
+    let [x, y] = spaceCoords
+    // x = +x
+    // y = +y
 
+    // const neighbors = [
+    //   document.getElementById(`${x - 1}, ${y - 1}`) || undefined,
+    //   document.getElementById(`${x}, ${y - 1}`) || undefined,
+    //   document.getElementById(`${x + 1}, ${y - 1}`) || undefined,
+    //   document.getElementById(`${x - 1}, ${y}`) || undefined,
+    //   document.getElementById(`${x + 1}, ${y}`) || undefined,
+    //   document.getElementById(`${x - 1}, ${y + 1}`) || undefined,
+    //   document.getElementById(`${x}, ${y + 1}`) || undefined,
+    //   document.getElementById(`${x + 1}, ${y + 1}`) || undefined,
+    // ]
     const neighbors = [
-      document.getElementById(`${x - 1}, ${y - 1}`) || undefined,
-      document.getElementById(`${x}, ${y - 1}`) || undefined,
-      document.getElementById(`${x + 1}, ${y - 1}`) || undefined,
-      document.getElementById(`${x - 1}, ${y}`) || undefined,
-      document.getElementById(`${x + 1}, ${y}`) || undefined,
-      document.getElementById(`${x - 1}, ${y + 1}`) || undefined,
-      document.getElementById(`${x}, ${y + 1}`) || undefined,
-      document.getElementById(`${x + 1}, ${y + 1}`) || undefined,
+      document.querySelector(`[coords="${x - 1},${y - 1}"]`),
+      document.querySelector(`[coords="${x},${y - 1}"]`),
+      document.querySelector(`[coords="${x + 1},${y - 1}"]`),
+      document.querySelector(`[coords="${x - 1},${y}"]`),
+      document.querySelector(`[coords="${x + 1},${y}"]`),
+      document.querySelector(`[coords="${x - 1},${y + 1}"]`),
+      document.querySelector(`[coords="${x},${y + 1}"]`),
+      document.querySelector(`[coords="${x + 1},${y + 1}"]`),
     ]
 
     if (action === 'add') {
@@ -67,7 +77,7 @@ class Field extends Component {
         selectedDivs[0].classList.remove('selected')
       }
       if (selectedSpace) {
-        this.getNeighbors(selectedSpace.id, 'remove')
+        this.getNeighbors(selectedSpace.coords, 'remove')
       }
       spaceDiv.classList.add('selected')
     }
@@ -76,12 +86,12 @@ class Field extends Component {
     if (spaceDiv.classList.contains('player')) {
       if (selectedSpace.id !== space.id) {
         if (selectedSpace) {
-          this.getNeighbors(selectedSpace.id, 'remove')
+          this.getNeighbors(selectedSpace.coords, 'remove')
         }
         this.setState({selectedSpace: space})
-        this.getNeighbors(space.id, 'add')
+        this.getNeighbors(space.coords, 'add')
       } else {
-        this.getNeighbors(space.id, 'remove')
+        this.getNeighbors(space.coords, 'remove')
       }
     }
 
@@ -109,35 +119,36 @@ class Field extends Component {
     return (
       <div className="field">
       {
-
-        spaces && Object.keys(spaces).map(coords => {
-          return (<div
-            className={
-              spaces[coords].hasBall ? 'space ball' :
-              spaces[coords].hasPlayer ? 'space player' : 'space'
-            }
-            key={spaces[coords].id}
-            id={spaces[coords].id}
-            onClick={() => {
-              this.handleClick(spaces[coords])
-            }
-          }
-          />)
-        })
-        // spaces && spaces.map(space => {
+        // spaces && Object.keys(spaces).map(coords => {
         //   return (<div
         //     className={
-        //       space.hasBall ? 'space ball' :
-        //         space.hasPlayer ? 'space player' : 'space'
+        //       spaces[coords].hasBall ? 'space ball' :
+        //       spaces[coords].hasPlayer ? 'space player' : 'space'
         //     }
-        //     key={space.id}
-        //     id={space.id}
+        //     key={spaces[coords].id}
+        //     id={spaces[coords].id}
         //     onClick={() => {
-        //       this.handleClick(space)
+        //       this.handleClick(spaces[coords])
         //     }
         //   }
         //   />)
         // })
+
+        spaces && spaces.map(space => {
+          return (<div
+            className={
+              space.hasBall ? 'space ball' :
+                space.hasPlayer ? 'space player' : 'space'
+            }
+            key={space.id}
+            id={space.id}
+            coords={space.coords}
+            onClick={() => {
+              this.handleClick(space)
+            }
+          }
+          />)
+        })
       }
       </div>
     )

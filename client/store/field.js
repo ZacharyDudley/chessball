@@ -5,7 +5,7 @@ import history from '../history'
 
 const defaultState = {
   id: '',
-  spaces: {}
+  spaces: []
 }
 
 // ACTION TYPES
@@ -65,38 +65,79 @@ export const buildField = (width, height) => dispatch => {
     ]
   }
 
-  const spaces = {}
+  // const spaces = {}
+  // let ballLocation
+
+  // for (var heightIndex = 0; heightIndex <= height; heightIndex++) {
+  //   for (var widthIndex = 0; widthIndex <= width; widthIndex++) {
+  //     if (widthIndex === midWidth && heightIndex === midHeight) {
+  //       ballLocation = `${widthIndex}, ${heightIndex}`
+
+  //       spaces[`${widthIndex}, ${heightIndex}`] = {
+  //         id: `${widthIndex}, ${heightIndex}`,
+  //         hasBall: true,
+  //         hasPlayer: ''
+  //       }
+  //     } else {
+  //       let player = team.guys.filter(guy => {
+  //         if (guy.loc === `${widthIndex}, ${heightIndex}`) {
+  //           return guy
+  //         }
+  //       })
+
+  //       if (player.length) {
+  //         spaces[`${widthIndex}, ${heightIndex}`] = {
+  //           id: `${widthIndex}, ${heightIndex}`,
+  //           hasBall: false,
+  //           hasPlayer: `${player[0].id}`
+  //         }
+  //       } else {
+  //         spaces[`${widthIndex}, ${heightIndex}`] = {
+  //           id: `${widthIndex}, ${heightIndex}`,
+  //           hasBall: false,
+  //           hasPlayer: ''
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
+  const spaces = []
   let ballLocation
+  var i = 0
 
-  for (var heightIndex = 0; heightIndex <= height; heightIndex++) {
-    for (var widthIndex = 0; widthIndex <= width; widthIndex++) {
-      if (widthIndex === midWidth && heightIndex === midHeight) {
-        ballLocation = `${widthIndex}, ${heightIndex}`
+  for (var h = 0; h <= height; h++) {
+    for (var w = 0; w <= width; w++) {
+      if (w === midWidth && h === midHeight) {
+        ballLocation = i
 
-        spaces[`${widthIndex}, ${heightIndex}`] = {
-          id: `${widthIndex}, ${heightIndex}`,
+        spaces.push({
+          id: i++,
+          coords: [w, h],
           hasBall: true,
           hasPlayer: ''
-        }
+        })
       } else {
         let player = team.guys.filter(guy => {
-          if (guy.loc === `${widthIndex}, ${heightIndex}`) {
+          if (guy.loc === `${w}, ${h}`) {
             return guy
           }
         })
 
         if (player.length) {
-          spaces[`${widthIndex}, ${heightIndex}`] = {
-            id: `${widthIndex}, ${heightIndex}`,
+          spaces.push({
+            id: i++,
+            coords: [w, h],
             hasBall: false,
             hasPlayer: `${player[0].id}`
-          }
+          })
         } else {
-          spaces[`${widthIndex}, ${heightIndex}`] = {
-            id: `${widthIndex}, ${heightIndex}`,
+          spaces.push({
+            id: i++,
+            coords: [w, h],
             hasBall: false,
             hasPlayer: ''
-          }
+          })
         }
       }
     }
