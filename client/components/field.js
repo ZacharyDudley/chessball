@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-// import firebase from '../../server/firebase'
 import { getField, movePlayer } from '../store'
 
 import '../css/field.scss';
@@ -11,9 +10,12 @@ class Field extends Component {
     super()
     this.state = {
       selectedSpace: '',
+      neighborsOfSelected: [],
     }
     this.handleClick = this.handleClick.bind(this)
     this.getNeighbors = this.getNeighbors.bind(this)
+    this.setNeighbors = this.setNeighbors.bind(this)
+    this.setSelectedSpace = this.setSelectedSpace.bind(this)
   }
 
   componentDidMount(){
@@ -21,21 +23,56 @@ class Field extends Component {
     getBoard()
   }
 
+  setNeighbors(spaceCoords) {
+    let [x, y] = spaceCoords
+
+    this.setState({
+      neighborsOfSelected: [
+        document.querySelector(`[coords="${x - 1},${y - 1}"]`),
+        document.querySelector(`[coords="${x},${y - 1}"]`),
+        document.querySelector(`[coords="${x + 1},${y - 1}"]`),
+        document.querySelector(`[coords="${x - 1},${y}"]`),
+        document.querySelector(`[coords="${x + 1},${y}"]`),
+        document.querySelector(`[coords="${x - 1},${y + 1}"]`),
+        document.querySelector(`[coords="${x},${y + 1}"]`),
+        document.querySelector(`[coords="${x + 1},${y + 1}"]`),
+      ]
+    })
+  }
+
+  setSelectedSpace(space) {
+    this.setState({selectedSpace: space})
+    this.setNeighbors(space.coords)
+  }
+
+  clickedPlayerSpace(space) {
+    this.state.selectedSpace.id === space.id
+      ? this.setSelectedSpace('')
+      : (
+          this.setSelectedSpace(space)
+          // ,
+          // this.highlightNeighbors(space)
+        )
+  }
+
+  clickedPlayerNeighborSpace(space) {
+    // const spaceDiv = document.getElementById(space.id)
+    // spaceDiv.classList.contains('ball')
+    //   ? this.clickedBallSpace()
+    //   : send data to move player route
+  }
+
+  clickedBallSpace() {
+    // show ball neighbors
+  }
+
+  clickedBallNeighborSpace() {
+    // send data to move ball route
+  }
+
   getNeighbors(spaceCoords, action) {
     let [x, y] = spaceCoords
-    // x = +x
-    // y = +y
 
-    // const neighbors = [
-    //   document.getElementById(`${x - 1}, ${y - 1}`) || undefined,
-    //   document.getElementById(`${x}, ${y - 1}`) || undefined,
-    //   document.getElementById(`${x + 1}, ${y - 1}`) || undefined,
-    //   document.getElementById(`${x - 1}, ${y}`) || undefined,
-    //   document.getElementById(`${x + 1}, ${y}`) || undefined,
-    //   document.getElementById(`${x - 1}, ${y + 1}`) || undefined,
-    //   document.getElementById(`${x}, ${y + 1}`) || undefined,
-    //   document.getElementById(`${x + 1}, ${y + 1}`) || undefined,
-    // ]
     const neighbors = [
       document.querySelector(`[coords="${x - 1},${y - 1}"]`),
       document.querySelector(`[coords="${x},${y - 1}"]`),
@@ -62,6 +99,8 @@ class Field extends Component {
     const { selectedSpace } = this.state
     const selectedDivs = document.getElementsByClassName('selected')
     const spaceDiv = document.getElementById(space.id)
+
+    this.setNeighbors(space.coords)
 
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
@@ -101,44 +140,37 @@ class Field extends Component {
       console.log('BALL')
     }
 
-    //IF PLAYER SPACE
-      //SET STATE
-    //IF NEIGHBOR SPACE
-      //MOVE PLAYER
-    //IF NEIGHBOR SPACE AND BALL
-      //HIGHLIGHT BALL OPTIONS
-    //IF BALL NEIGHBOR
-      //MOVE BALL
-
+    // switch(clickedSpaceContains) {
+    //   case 'selected':
+    //     this.state.selectedSpace.id === space.id
+    //       ? this.setSelectedSpace('')
+    //       : this.setSelectedSpace(space)
+    //     return
+    //   case 'player':
+    //     return
+    //   case 'playerNeighbor':
+    //     return
+    //   case 'ball':
+    //     return
+    //   case 'ballNeighbor':
+    //     return
+    //   default:
+    //     return
+    // }
   }
 
 
   render() {
     const { spaces } = this.props
-
+console.log(this.state)
     return (
       <div className="field">
       {
-        // spaces && Object.keys(spaces).map(coords => {
-        //   return (<div
-        //     className={
-        //       spaces[coords].hasBall ? 'space ball' :
-        //       spaces[coords].hasPlayer ? 'space player' : 'space'
-        //     }
-        //     key={spaces[coords].id}
-        //     id={spaces[coords].id}
-        //     onClick={() => {
-        //       this.handleClick(spaces[coords])
-        //     }
-        //   }
-        //   />)
-        // })
-
         spaces && spaces.map(space => {
           return (<div
             className={
-              space.hasBall ? 'space ball' :
-                space.hasPlayer ? 'space player' : 'space'
+              space.hasBall ? 'space ball'
+                : space.hasPlayer ? 'space player' : 'space'
             }
             key={space.id}
             id={space.id}
@@ -173,33 +205,6 @@ const mapDispatch = (dispatch, ownProps) => {
     playerAction: (oldSpace, newSpace) => {
       dispatch(movePlayer(gameId, oldSpace, newSpace))
     }
-    // handleClick: (space) => {
-    //   const selectedDivs = document.getElementsByClassName('selected')
-    //   const spaceDiv = document.getElementById(space.id)
-
-    //   if (spaceDiv.classList.contains('player') && spaceDiv.classList.contains('selected')) {
-    //     // this.setState({selectedPlayerSpace: space})
-    //     console.log(this.state.selectedPlayerSpace)
-    //   }
-
-    //   // if (selectedDivs.length) {
-    //   //   Array.prototype.filter.call(selectedDivs, div => {
-    //   //     div.classList.remove('selected')
-    //   //   })
-    //   // }
-
-    //   while (selectedDivs.length) {
-    //     selectedDivs[0].classList.remove('selected')
-    //   }
-
-    //   if (spaceDiv.classList.contains('selected')) {
-    //     console.log('CLICKED')
-    //     spaceDiv.classList.remove('selected')
-    //   }
-
-    //   spaceDiv.classList.add('selected')
-
-    // },
   }
 }
 
