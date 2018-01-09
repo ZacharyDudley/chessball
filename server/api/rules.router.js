@@ -15,7 +15,7 @@ const isSpaceFree = (newSpace) => {
   return !newSpace.hasPlayer && !newSpace.hasBall
 }
 
-const isValidPlayerMove = (oldSpace, newSpace) => {
+const isValidMove = (oldSpace, newSpace) => {
   return isSpaceNeighbor(oldSpace.coords, newSpace.coords) && isSpaceFree(newSpace)
 }
 
@@ -27,25 +27,32 @@ router.put('/:gameId/movePlayer', function (req, res, next) {
 
 
   //CHECK IF SPACES ARE NEIGHBORS
-  if (isValidPlayerMove(req.body.oldSpace, req.body.newSpace)) {
+  if (isValidMove(req.body.oldSpace, req.body.newSpace)) {
     firebase.ref(`/${req.params.gameId}`).update(updates)
     .then(snap => res.sendStatus(200))
     .catch(err => next(err))
   } else {
-    console.log('Not updated')
+    console.log('PLAYER not updated')
   }
 
 })
 
-router.put('/:gameId', function (req, res, next) {
-  // console.log('REQ: ', req.body)
+router.put('/:gameId/moveBall', function (req, res, next) {
 
-  // let updates = {}
-  // updates[`/spaces/`]
+  let updates = {}
+  updates[`/ballLocation`] = req.body.newSpace.id
+  updates[`/spaces/${req.body.oldSpace.id}/hasBall`] = false
+  updates[`/spaces/${req.body.newSpace.id}/hasBall`] = true
 
-  // firebase.ref(`/${req.params.gameId}`).once('value')
-  // .then(snap => res.status(200).send(snap.val()))
-  // .catch(err => next(err))
+
+  //CHECK IF SPACES ARE NEIGHBORS
+  if (isValidMove(req.body.oldSpace, req.body.newSpace)) {
+    firebase.ref(`/${req.params.gameId}`).update(updates)
+    .then(snap => res.sendStatus(200))
+    .catch(err => next(err))
+  } else {
+    console.log('BALL not updated')
+  }
 })
 
 module.exports = router;

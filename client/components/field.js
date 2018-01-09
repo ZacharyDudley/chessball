@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getField, movePlayer } from '../store'
+import { getField, movePlayer, moveBall } from '../store'
 
 import '../css/field.scss';
 
@@ -12,6 +12,7 @@ class Field extends Component {
       selectedSpace: '',
       neighborsOfSelected: [],
       showNeighbors: false,
+      ball: '',
     }
     this.handleClick = this.handleClick.bind(this)
     this.highlightNeighbors = this.highlightNeighbors.bind(this)
@@ -156,7 +157,7 @@ class Field extends Component {
 
     if (action === 'add') {
       neighbors.forEach(neighborSpace => {
-        if (neighborSpace) {
+        if (neighborSpace && !neighborSpace.classList.contains('player')) {
           neighborSpace.classList.add('neighbor')
         }
       })
@@ -211,10 +212,22 @@ class Field extends Component {
 
     // this.setNeighbors(space.coords)
 
+
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
-      this.getNeighbors(selectedSpace.coords, 'remove')
-      this.props.playerAction(selectedSpace, space)
+      if (spaceDiv.classList.contains('ball')) {
+        this.getNeighbors(selectedSpace.coords, 'remove')
+        this.setState({selectedSpace: space})
+        this.getNeighbors(space.coords, 'add')
+      } else {
+        this.getNeighbors(selectedSpace.coords, 'remove')
+        this.props.playerAction(selectedSpace, space)
+      }
+
+      if (selectedSpace.id === this.props.ballLocationId) {
+        this.getNeighbors(selectedSpace.coords, 'remove')
+        this.props.ballAction(selectedSpace, space)
+      }
     }
 
     // PLACE SELECTED CURSOR ON SPACE
@@ -239,16 +252,14 @@ class Field extends Component {
         this.setState({selectedSpace: space})
         this.getNeighbors(space.coords, 'add')
       } else {
+        this.setState({selectedSpace: ''})
         this.getNeighbors(space.coords, 'remove')
       }
     }
 
-
-
-    if (spaceDiv.classList.contains('neighbor') && spaceDiv.classList.contains('ball')) {
-      console.log('Can move ball')
-
-      this.getNeighbors(space.coords, 'add')
+    if (spaceDiv.classList.contains('ball') && selectedSpace.id === this.props.ballLocationId) {
+      this.setState({selectedSpace: ''})
+      this.getNeighbors(space.coords, 'remove')
     }
 
   }
@@ -256,7 +267,8 @@ class Field extends Component {
 
   render() {
     const { spaces } = this.props
-    console.log('RENDER state', this.state.selectedSpace.id)
+    console.log('BALL State', this.state.ball)
+    console.log('Selected Space', this.state.selectedSpace)
     //DO HIGHLIGHTING HERE
 
     return (
@@ -301,6 +313,9 @@ const mapDispatch = (dispatch, ownProps) => {
     },
     playerAction: (oldSpace, newSpace) => {
       dispatch(movePlayer(gameId, oldSpace, newSpace))
+    },
+    ballAction: (oldSpace, newSpace) => {
+      dispatch(moveBall(gameId, oldSpace, newSpace))
     }
   }
 }
