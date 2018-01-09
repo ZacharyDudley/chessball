@@ -27,11 +27,15 @@
     background: rgb(255, 255, 255);
   }
 
-  &.player {
+  // &.player {
+  //   background: rgb(2, 0, 124);
+  // }
+
+  &.home {
     background: rgb(2, 0, 124);
   }
 
-  &.teamA {
+  &.away {
     background: rgb(187, 0, 0);
   }
 

@@ -277,8 +277,11 @@ class Field extends Component {
         spaces && spaces.map(space => {
           return (<div
             className={
+              // space.hasBall ? 'space ball'
+              //   : space.hasPlayer ? 'space player' : 'space'
               space.hasBall ? 'space ball'
-                : space.hasPlayer ? 'space player' : 'space'
+                : !space.hasPlayer ? 'space'
+                : space.hasPlayer >= 20 ? 'space player away' : 'space player home'
             }
             key={space.id}
             id={space.id}
