@@ -156,7 +156,9 @@ class Field extends Component {
 
     if (action === 'add') {
       neighbors.forEach(neighborSpace => {
-        if (neighborSpace) {
+        if (!neighborSpace || neighborSpace.classList.contains('player')) {
+          console.log('INVALID SPACE')
+        } else {
           neighborSpace.classList.add('neighbor')
         }
       })
@@ -211,10 +213,17 @@ class Field extends Component {
 
     // this.setNeighbors(space.coords)
 
+
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
-      this.getNeighbors(selectedSpace.coords, 'remove')
-      this.props.playerAction(selectedSpace, space)
+      if (spaceDiv.classList.contains('ball')) {
+        console.log('Can move ball')
+        console.log(this.props.ballLocationId)
+        this.getNeighbors(space.coords, 'add')
+      } else {
+        this.getNeighbors(selectedSpace.coords, 'remove')
+        this.props.playerAction(selectedSpace, space)
+      }
     }
 
     // PLACE SELECTED CURSOR ON SPACE
@@ -239,17 +248,13 @@ class Field extends Component {
         this.setState({selectedSpace: space})
         this.getNeighbors(space.coords, 'add')
       } else {
+        this.setState({selectedSpace: ''})
         this.getNeighbors(space.coords, 'remove')
       }
     }
 
 
 
-    if (spaceDiv.classList.contains('neighbor') && spaceDiv.classList.contains('ball')) {
-      console.log('Can move ball')
-
-      this.getNeighbors(space.coords, 'add')
-    }
 
   }
 
