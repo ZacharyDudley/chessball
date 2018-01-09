@@ -1,5 +1,6 @@
 import axios from 'axios'
 import history from '../history'
+import { getField } from './index';
 // import firebase from '../firebase'
 
 // ACTION TYPES
@@ -41,11 +42,11 @@ export const moveBall = (gameId, oldSpace, newSpace) => dispatch => {
   .catch(err => console.error(`Updating ball at ${oldSpace} unsuccessful`, err));
 }
 
-export const movePlayer = (gameId, playerId, oldSpace, newSpace) => dispatch => {
-  axios.put(`/api/games/${gameId}/${playerId}`, newSpace)
-  .then(res => dispatch(updatePlayer(res.data)))
-  .catch(err => console.error(`Updating player ${playerId} unsuccessful`, err));
-}
+// export const movePlayer = (gameId, oldSpace, newSpace) => dispatch => {
+//   axios.put(`/api/rules/${gameId}/movePlayer`, {oldSpace, newSpace})
+//   .then(res => dispatch(getField(gameId)))
+//   .catch(err => console.error(`Updating player ${playerId} unsuccessful`, err));
+// }
 
 // REDUCER
 
