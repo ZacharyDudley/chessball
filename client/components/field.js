@@ -12,7 +12,7 @@ class Field extends Component {
       selectedSpace: '',
       neighborsOfSelected: [],
       showNeighbors: false,
-      ballSelected: false,
+      ball: '',
     }
     this.handleClick = this.handleClick.bind(this)
     this.highlightNeighbors = this.highlightNeighbors.bind(this)
@@ -215,17 +215,18 @@ class Field extends Component {
 
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
-      if (this.state.ball) {
-        this.getNeighbors(this.state.ball.coords, 'remove')
-        this.props.ballAction(this.state.ball, space)
-        this.setState({ball: ''})
-      } else if (spaceDiv.classList.contains('ball')) {
-        this.setState({ball: space})
+      if (spaceDiv.classList.contains('ball')) {
         this.getNeighbors(selectedSpace.coords, 'remove')
+        this.setState({selectedSpace: space})
         this.getNeighbors(space.coords, 'add')
       } else {
         this.getNeighbors(selectedSpace.coords, 'remove')
         this.props.playerAction(selectedSpace, space)
+      }
+
+      if (selectedSpace.id === this.props.ballLocationId) {
+        this.getNeighbors(selectedSpace.coords, 'remove')
+        this.props.ballAction(selectedSpace, space)
       }
     }
 
@@ -256,12 +257,17 @@ class Field extends Component {
       }
     }
 
+    if (spaceDiv.classList.contains('ball') && selectedSpace.id === this.props.ballLocationId) {
+      this.setState({selectedSpace: ''})
+      this.getNeighbors(space.coords, 'remove')
+    }
+
   }
 
 
   render() {
     const { spaces } = this.props
-    console.log('RENDER state', this.state.ballSelected)
+    console.log('BALL State', this.state.ball)
     console.log('Selected Space', this.state.selectedSpace)
     //DO HIGHLIGHTING HERE
 
