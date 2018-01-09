@@ -36,11 +36,11 @@ const updatePlayer = player => ({type: UPDATE_PLAYER, player})
 //     .then(snap => console.log(snap.value))
 // }
 
-export const moveBall = (gameId, oldSpace, newSpace) => dispatch => {
-  axios.put(`/api/games/${gameId}`, newSpace)
-  .then(res => dispatch(updateBall(res.data)))
-  .catch(err => console.error(`Updating ball at ${oldSpace} unsuccessful`, err));
-}
+// export const moveBall = (gameId, oldSpace, newSpace) => dispatch => {
+//   axios.put(`/api/games/${gameId}`, newSpace)
+//   .then(res => dispatch(updateBall(res.data)))
+//   .catch(err => console.error(`Updating ball at ${oldSpace} unsuccessful`, err));
+// }
 
 // export const movePlayer = (gameId, oldSpace, newSpace) => dispatch => {
 //   axios.put(`/api/rules/${gameId}/movePlayer`, {oldSpace, newSpace})

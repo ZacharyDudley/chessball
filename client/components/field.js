@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getField, movePlayer } from '../store'
+import { getField, movePlayer, moveBall } from '../store'
 
 import '../css/field.scss';
 
@@ -12,6 +12,7 @@ class Field extends Component {
       selectedSpace: '',
       neighborsOfSelected: [],
       showNeighbors: false,
+      ballSelected: false,
     }
     this.handleClick = this.handleClick.bind(this)
     this.highlightNeighbors = this.highlightNeighbors.bind(this)
@@ -156,9 +157,7 @@ class Field extends Component {
 
     if (action === 'add') {
       neighbors.forEach(neighborSpace => {
-        if (!neighborSpace || neighborSpace.classList.contains('player')) {
-          console.log('INVALID SPACE')
-        } else {
+        if (neighborSpace && !neighborSpace.classList.contains('player')) {
           neighborSpace.classList.add('neighbor')
         }
       })
@@ -216,9 +215,13 @@ class Field extends Component {
 
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
-      if (spaceDiv.classList.contains('ball')) {
-        console.log('Can move ball')
-        console.log(this.props.ballLocationId)
+      if (this.state.ball) {
+        this.getNeighbors(this.state.ball.coords, 'remove')
+        this.props.ballAction(this.state.ball, space)
+        this.setState({ball: ''})
+      } else if (spaceDiv.classList.contains('ball')) {
+        this.setState({ball: space})
+        this.getNeighbors(selectedSpace.coords, 'remove')
         this.getNeighbors(space.coords, 'add')
       } else {
         this.getNeighbors(selectedSpace.coords, 'remove')
@@ -253,15 +256,13 @@ class Field extends Component {
       }
     }
 
-
-
-
   }
 
 
   render() {
     const { spaces } = this.props
-    console.log('RENDER state', this.state.selectedSpace.id)
+    console.log('RENDER state', this.state.ballSelected)
+    console.log('Selected Space', this.state.selectedSpace)
     //DO HIGHLIGHTING HERE
 
     return (
@@ -306,6 +307,9 @@ const mapDispatch = (dispatch, ownProps) => {
     },
     playerAction: (oldSpace, newSpace) => {
       dispatch(movePlayer(gameId, oldSpace, newSpace))
+    },
+    ballAction: (oldSpace, newSpace) => {
+      dispatch(moveBall(gameId, oldSpace, newSpace))
     }
   }
 }
