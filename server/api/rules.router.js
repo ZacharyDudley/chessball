@@ -22,8 +22,10 @@ const isValidMove = (oldSpace, newSpace) => {
 router.put('/:gameId/movePlayer', function (req, res, next) {
 
   let updates = {}
-  updates[`/spaces/${req.body.oldSpace.id}/hasPlayer`] = ''
-  updates[`/spaces/${req.body.newSpace.id}/hasPlayer`] = req.body.oldSpace.hasPlayer
+  updates[`/spaces/${req.body.oldSpace.id}/type`] = ''
+  updates[`/spaces/${req.body.oldSpace.id}/typeId`] = ''
+  updates[`/spaces/${req.body.newSpace.id}/type`] = req.body.oldSpace.type
+  updates[`/spaces/${req.body.newSpace.id}/typeId`] = req.body.oldSpace.typeId
 
 
   //CHECK IF SPACES ARE NEIGHBORS
@@ -41,8 +43,8 @@ router.put('/:gameId/moveBall', function (req, res, next) {
 
   let updates = {}
   updates[`/ball/locationId`] = req.body.newSpace.id
-  updates[`/spaces/${req.body.oldSpace.id}/hasBall`] = false
-  updates[`/spaces/${req.body.newSpace.id}/hasBall`] = true
+  updates[`/spaces/${req.body.oldSpace.id}/type`] = ''
+  updates[`/spaces/${req.body.newSpace.id}/type`] = 'ball'
 
 
   //CHECK IF SPACES ARE NEIGHBORS

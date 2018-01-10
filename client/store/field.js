@@ -34,31 +34,37 @@ export const buildField = (width, height) => dispatch => {
     guys: [
       {
         id: 10,
+        team: 'home',
         name: 'Left Back',
         loc: `${Math.floor(width / 12) + 1}, ${Math.floor(height / 3) - 1}`
       },
       {
         id: 11,
+        team: 'home',
         name: 'Right Back',
         loc: `${Math.floor(width / 12) + 1}, ${Math.floor((height / 3) * 2) + 1}`
       },
       {
         id: 12,
+        team: 'home',
         name: 'Midfielder',
         loc: `${Math.floor(width / 4)}, ${Math.floor(height / 2)}`
       },
       {
         id: 13,
+        team: 'home',
         name: 'Left Forward',
         loc: `${Math.floor((width / 2) - 1)}, ${1}`
       },
       {
         id: 14,
+        team: 'home',
         name: 'Striker',
         loc: `${Math.floor((width / 2) - 1)}, ${Math.floor(height / 2)}`
       },
       {
         id: 15,
+        team: 'home',
         name: 'Right Forward',
         loc: `${Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2) + 1}`
       },
@@ -70,31 +76,37 @@ export const buildField = (width, height) => dispatch => {
     guys: [
       {
         id: 20,
+        team: 'away',
         name: 'Left Back',
         loc: `${width - Math.floor(width / 12) - 1}, ${Math.floor(height / 3) - 1}`
       },
       {
         id: 21,
+        team: 'away',
         name: 'Right Back',
         loc: `${width - Math.floor(width / 12) - 1}, ${Math.floor((height / 3) * 2) + 1}`
       },
       {
         id: 22,
+        team: 'away',
         name: 'Midfielder',
         loc: `${width - Math.floor(width / 4) + 2}, ${Math.floor(height / 2)}`
       },
       {
         id: 23,
+        team: 'away',
         name: 'Left Forward',
         loc: `${width - Math.floor((width / 2) - 1)}, ${1}`
       },
       {
         id: 24,
+        team: 'away',
         name: 'Striker',
         loc: `${width - Math.floor((width / 4)) - 1}, ${Math.floor(height / 2)}`
       },
       {
         id: 25,
+        team: 'away',
         name: 'Right Forward',
         loc: `${width - Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2) + 1}`
       },
@@ -104,46 +116,10 @@ export const buildField = (width, height) => dispatch => {
   const teams = { home, away }
   const allPlayers = [...home.guys, ...away.guys]
 
-  // const spaces = {}
-  // let ballLocation
-
-  // for (var heightIndex = 0; heightIndex <= height; heightIndex++) {
-  //   for (var widthIndex = 0; widthIndex <= width; widthIndex++) {
-  //     if (widthIndex === midWidth && heightIndex === midHeight) {
-  //       ballLocation = `${widthIndex}, ${heightIndex}`
-
-  //       spaces[`${widthIndex}, ${heightIndex}`] = {
-  //         id: `${widthIndex}, ${heightIndex}`,
-  //         hasBall: true,
-  //         hasPlayer: ''
-  //       }
-  //     } else {
-  //       let player = team.guys.filter(guy => {
-  //         if (guy.loc === `${widthIndex}, ${heightIndex}`) {
-  //           return guy
-  //         }
-  //       })
-
-  //       if (player.length) {
-  //         spaces[`${widthIndex}, ${heightIndex}`] = {
-  //           id: `${widthIndex}, ${heightIndex}`,
-  //           hasBall: false,
-  //           hasPlayer: `${player[0].id}`
-  //         }
-  //       } else {
-  //         spaces[`${widthIndex}, ${heightIndex}`] = {
-  //           id: `${widthIndex}, ${heightIndex}`,
-  //           hasBall: false,
-  //           hasPlayer: ''
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
   const spaces = []
   let ball = {
     locationId: '',
+    coords: '',
     velocity: '',
     direction: '',
   }
@@ -153,19 +129,16 @@ export const buildField = (width, height) => dispatch => {
     for (var w = 0; w <= width; w++) {
       if (w === midWidth && h === midHeight) {
         ball.locationId = i
+        ball.coords = `${w}, ${h}`
 
         spaces.push({
           id: i++,
           coords: [w, h],
-          hasBall: true,
-          hasPlayer: ''
+          type: 'ball',
+          typeId: ''
+          // hasBall: true,
         })
       } else {
-        // let player = allPlayers.filter(guy => {
-        //   if (guy.loc === `${w}, ${h}`) {
-        //     return guy
-        //   }
-        // })
         let player = allPlayers.filter(guy => {
           return guy.loc === `${w}, ${h}`
         })
@@ -174,15 +147,19 @@ export const buildField = (width, height) => dispatch => {
           spaces.push({
             id: i++,
             coords: [w, h],
-            hasBall: false,
-            hasPlayer: `${player[0].id}`
+            type: `${player[0].team}`,
+            typeId: `${player[0].id}`
+            // hasBall: false,
+            // hasPlayer: `${player[0].id}`
           })
         } else {
           spaces.push({
             id: i++,
             coords: [w, h],
-            hasBall: false,
-            hasPlayer: ''
+            type: 'space',
+            typeId: ''
+            // hasBall: false,
+            // hasPlayer: ''
           })
         }
       }
@@ -203,7 +180,7 @@ export const getField = gameId => dispatch => {
 export const movePlayer = (gameId, oldSpace, newSpace) => dispatch => {
   axios.put(`/api/rules/${gameId}/movePlayer`, {oldSpace, newSpace})
   .then(res => dispatch(getField(gameId)))
-  .catch(err => console.error(`Updating player ${playerId} unsuccessful`, err));
+  .catch(err => console.error(`Updating player unsuccessful`, err));
 }
 
 export const moveBall = (gameId, oldSpace, newSpace) => dispatch => {
