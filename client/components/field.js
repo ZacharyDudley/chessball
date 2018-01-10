@@ -126,80 +126,147 @@ class Field extends Component {
 
   }
 
-  clickedPlayerNeighborSpace(space) {
-    // const spaceDiv = document.getElementById(space.id)
-    // spaceDiv.classList.contains('ball')
-    //   ? this.clickedBallSpace()
-    //   : send data to move player route
+  clearHighlightedNeighbors() {
+    const allNeighbors = document.getElementsByClassName('neighbor')
+
+    while (allNeighbors.length) {
+      allNeighbors[0].classList.remove('neighbor')
+    }
   }
 
-  clickedBallSpace() {
-    // show ball neighbors
-  }
-
-  clickedBallNeighborSpace() {
-    // send data to move ball route
-  }
-
-  getNeighbors(spaceCoords, action, distance = 1) {
+  getValidNeighbors(spaceCoords, distance) {
     let [x, y] = spaceCoords
+    let validNeighborDivs = []
+    let neighborsToCheck = []
 
-    const distanceOne = [
-      document.querySelector(`[coords="${x - 1},${y - 1}"]`),
-      document.querySelector(`[coords="${x},${y - 1}"]`),
-      document.querySelector(`[coords="${x + 1},${y - 1}"]`),
-      document.querySelector(`[coords="${x - 1},${y}"]`),
-      document.querySelector(`[coords="${x + 1},${y}"]`),
-      document.querySelector(`[coords="${x - 1},${y + 1}"]`),
-      document.querySelector(`[coords="${x},${y + 1}"]`),
-      document.querySelector(`[coords="${x + 1},${y + 1}"]`),
+    let everything = [
+      [
+        'leftUp',
+        'centerUp',
+        'rightUp',
+        'leftCenter',
+        'rightCenter',
+        'leftDown',
+        'centerDown',
+        'rightDown',
+      ], [
+        `[coords="${x - 1},${y - 1}"]`,
+        `[coords="${x},${y - 1}"]`,
+        `[coords="${x + 1},${y - 1}"]`,
+        `[coords="${x - 1},${y}"]`,
+        `[coords="${x + 1},${y}"]`,
+        `[coords="${x - 1},${y + 1}"]`,
+        `[coords="${x},${y + 1}"]`,
+        `[coords="${x + 1},${y + 1}"]`
+      ], [
+        `[coords="${x - 2},${y - 2}"]`,
+        `[coords="${x},${y - 2}"]`,
+        `[coords="${x + 2},${y - 2}"]`,
+        `[coords="${x - 2},${y}"]`,
+        `[coords="${x + 2},${y}"]`,
+        `[coords="${x - 2},${y + 2}"]`,
+        `[coords="${x},${y + 2}"]`,
+        `[coords="${x + 2},${y + 2}"]`
+      ], [
+        `[coords="${x - 3},${y - 3}"]`,
+        `[coords="${x},${y - 3}"]`,
+        `[coords="${x + 3},${y - 3}"]`,
+        `[coords="${x - 3},${y}"]`,
+        `[coords="${x + 3},${y}"]`,
+        `[coords="${x - 3},${y + 3}"]`,
+        `[coords="${x},${y + 3}"]`,
+        `[coords="${x + 3},${y + 3}"]`
+      ]
     ]
-    const distanceTwo = [
-      document.querySelector(`[coords="${x - 2},${y - 2}"]`),
-      document.querySelector(`[coords="${x},${y - 2}"]`),
-      document.querySelector(`[coords="${x + 2},${y - 2}"]`),
-      document.querySelector(`[coords="${x - 2},${y}"]`),
-      document.querySelector(`[coords="${x + 2},${y}"]`),
-      document.querySelector(`[coords="${x - 2},${y + 2}"]`),
-      document.querySelector(`[coords="${x},${y + 2}"]`),
-      document.querySelector(`[coords="${x + 2},${y + 2}"]`),
-    ]
-
-    const distanceThree = [
-      document.querySelector(`[coords="${x - 3},${y - 3}"]`),
-      document.querySelector(`[coords="${x},${y - 3}"]`),
-      document.querySelector(`[coords="${x + 3},${y - 3}"]`),
-      document.querySelector(`[coords="${x - 3},${y}"]`),
-      document.querySelector(`[coords="${x + 3},${y}"]`),
-      document.querySelector(`[coords="${x - 3},${y + 3}"]`),
-      document.querySelector(`[coords="${x},${y + 3}"]`),
-      document.querySelector(`[coords="${x + 3},${y + 3}"]`),
-    ]
-
-    let neighbors
 
     if (distance === 1) {
-      neighbors = distanceOne
+      neighborsToCheck = [everything[0], everything[1]]
     } else if (distance === 2) {
-      neighbors = [...distanceOne, ...distanceTwo]
-    } else if (distance === 3) {
-      neighbors = [...distanceOne, ...distanceTwo, ...distanceThree]
+      neighborsToCheck = [everything[0], everything[1], everything[2]]
+    } else {
+      neighborsToCheck = everything
     }
 
-    if (action === 'add') {
-      neighbors.forEach(neighborSpace => {
-        if (neighborSpace && !neighborSpace.classList.contains('player')) {
-          neighborSpace.classList.add('neighbor')
-        }
-      })
-    } else if (action === 'remove') {
-      const allNeighbors = document.getElementsByClassName('neighbor')
 
-      while (allNeighbors.length) {
-        allNeighbors[0].classList.remove('neighbor')
+    for (var distanceIndex = 1; distanceIndex < neighborsToCheck.length; distanceIndex++) {
+      for (var directionIndex = 0; directionIndex < neighborsToCheck[0].length; directionIndex++) {
+        let neighborDiv = document.querySelector(neighborsToCheck[distanceIndex][directionIndex])
+        let blockingDiv = document.querySelector(neighborsToCheck[distanceIndex - 1][directionIndex])
+
+        if (neighborDiv && !neighborDiv.classList.contains('player')) {
+          if (distanceIndex < 2 || validNeighborDivs.includes(blockingDiv)) {
+            validNeighborDivs.push(neighborDiv)
+          }
+        }
       }
+    }
+
+      validNeighborDivs.forEach(neighborSpace => {
+          neighborSpace.classList.add('neighbor')
+      })
   }
-  }
+
+
+  // getNeighbors(spaceCoords, action, distance = 1) {
+  //   let [x, y] = spaceCoords
+
+  //   const distanceOne = [
+  //     document.querySelector(`[coords="${x - 1},${y - 1}"]`),
+  //     document.querySelector(`[coords="${x},${y - 1}"]`),
+  //     document.querySelector(`[coords="${x + 1},${y - 1}"]`),
+  //     document.querySelector(`[coords="${x - 1},${y}"]`),
+  //     document.querySelector(`[coords="${x + 1},${y}"]`),
+  //     document.querySelector(`[coords="${x - 1},${y + 1}"]`),
+  //     document.querySelector(`[coords="${x},${y + 1}"]`),
+  //     document.querySelector(`[coords="${x + 1},${y + 1}"]`),
+  //   ]
+
+  //   const distanceTwo = [
+  //     document.querySelector(`[coords="${x - 2},${y - 2}"]`),
+  //     document.querySelector(`[coords="${x},${y - 2}"]`),
+  //     document.querySelector(`[coords="${x + 2},${y - 2}"]`),
+  //     document.querySelector(`[coords="${x - 2},${y}"]`),
+  //     document.querySelector(`[coords="${x + 2},${y}"]`),
+  //     document.querySelector(`[coords="${x - 2},${y + 2}"]`),
+  //     document.querySelector(`[coords="${x},${y + 2}"]`),
+  //     document.querySelector(`[coords="${x + 2},${y + 2}"]`),
+  //   ]
+
+  //   const distanceThree = [
+  //     document.querySelector(`[coords="${x - 3},${y - 3}"]`),
+  //     document.querySelector(`[coords="${x},${y - 3}"]`),
+  //     document.querySelector(`[coords="${x + 3},${y - 3}"]`),
+  //     document.querySelector(`[coords="${x - 3},${y}"]`),
+  //     document.querySelector(`[coords="${x + 3},${y}"]`),
+  //     document.querySelector(`[coords="${x - 3},${y + 3}"]`),
+  //     document.querySelector(`[coords="${x},${y + 3}"]`),
+  //     document.querySelector(`[coords="${x + 3},${y + 3}"]`),
+  //   ]
+
+  //   let neighbors
+
+  //   if (distance === 1) {
+  //     neighbors = distanceOne
+  //   } else if (distance === 2) {
+  //     neighbors = [...distanceOne, ...distanceTwo]
+  //   } else if (distance === 3) {
+  //     neighbors = [...distanceOne, ...distanceTwo, ...distanceThree]
+  //   }
+
+  //   if (action === 'add') {
+  //     neighbors.forEach(neighborSpace => {
+  //       if (neighborSpace && !neighborSpace.classList.contains('player')) {
+  //         neighborSpace.classList.add('neighbor')
+  //       }
+  //     })
+  //   } else if (action === 'remove') {
+  //     const allNeighbors = document.getElementsByClassName('neighbor')
+
+  //     while (allNeighbors.length) {
+  //       allNeighbors[0].classList.remove('neighbor')
+  //     }
+  //   }
+  // }
 
   handleClick(space) {
     const { selectedSpace } = this.state
@@ -247,16 +314,20 @@ class Field extends Component {
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
       if (spaceDiv.classList.contains('ball')) {
-        this.getNeighbors(selectedSpace.coords, 'remove')
+        // this.getNeighbors(selectedSpace.coords, 'remove')
+        this.clearHighlightedNeighbors()
         this.setState({selectedSpace: space})
-        this.getNeighbors(space.coords, 'add', 3)
+        // this.getNeighbors(space.coords, 'add', 3)
+        this.getValidNeighbors(space.coords, 3)
       } else {
-        this.getNeighbors(selectedSpace.coords, 'remove')
+        // this.getNeighbors(selectedSpace.coords, 'remove')
+        this.clearHighlightedNeighbors()
         this.props.playerAction(selectedSpace, space)
       }
 
       if (selectedSpace.id === this.props.ball.locationId) {
-        this.getNeighbors(selectedSpace.coords, 'remove')
+        // this.getNeighbors(selectedSpace.coords, 'remove')
+        this.clearHighlightedNeighbors()
         this.props.ballAction(selectedSpace, space)
       }
     }
@@ -278,19 +349,23 @@ class Field extends Component {
     if (spaceDiv.classList.contains('player')) {
       if (selectedSpace.id !== space.id) {
         if (selectedSpace) {
-          this.getNeighbors(selectedSpace.coords, 'remove')
+          // this.getNeighbors(selectedSpace.coords, 'remove')
+          this.clearHighlightedNeighbors()
         }
         this.setState({selectedSpace: space})
-        this.getNeighbors(space.coords, 'add')
+        // this.getNeighbors(space.coords, 'add')
+        this.getValidNeighbors(space.coords, 1)
       } else {
         this.setState({selectedSpace: ''})
-        this.getNeighbors(space.coords, 'remove')
+        // this.getNeighbors(space.coords, 'remove')
+        this.clearHighlightedNeighbors()
       }
     }
 
-    if (spaceDiv.classList.contains('ball') && selectedSpace.id === this.props.ballLocationId) {
+    if (spaceDiv.classList.contains('ball') && selectedSpace.id === this.props.ball.locationId) {
       this.setState({selectedSpace: ''})
-      this.getNeighbors(space.coords, 'remove')
+      // this.getNeighbors(space.coords, 'remove')
+      this.clearHighlightedNeighbors()
     }
 
   }
