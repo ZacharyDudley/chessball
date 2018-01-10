@@ -35,12 +35,12 @@ export const buildField = (width, height) => dispatch => {
       {
         id: 10,
         name: 'Left Back',
-        loc: `${Math.floor(width / 12)}, ${Math.floor(height / 3)}`
+        loc: `${Math.floor(width / 12) + 1}, ${Math.floor(height / 3) - 1}`
       },
       {
         id: 11,
         name: 'Right Back',
-        loc: `${Math.floor(width / 12)}, ${Math.floor((height / 3) * 2) + 1}`
+        loc: `${Math.floor(width / 12) + 1}, ${Math.floor((height / 3) * 2) + 1}`
       },
       {
         id: 12,
@@ -71,12 +71,12 @@ export const buildField = (width, height) => dispatch => {
       {
         id: 20,
         name: 'Left Back',
-        loc: `${width - Math.floor(width / 12)}, ${Math.floor(height / 3)}`
+        loc: `${width - Math.floor(width / 12) - 1}, ${Math.floor(height / 3) - 1}`
       },
       {
         id: 21,
         name: 'Right Back',
-        loc: `${width - Math.floor(width / 12)}, ${Math.floor((height / 3) * 2) + 1}`
+        loc: `${width - Math.floor(width / 12) - 1}, ${Math.floor((height / 3) * 2) + 1}`
       },
       {
         id: 22,
@@ -91,7 +91,7 @@ export const buildField = (width, height) => dispatch => {
       {
         id: 24,
         name: 'Striker',
-        loc: `${width - Math.floor((width / 2) - 2)}, ${Math.floor(height / 2)}`
+        loc: `${width - Math.floor((width / 4)) - 1}, ${Math.floor(height / 2)}`
       },
       {
         id: 25,
