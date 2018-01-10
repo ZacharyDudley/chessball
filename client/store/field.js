@@ -29,41 +29,80 @@ export const buildField = (width, height) => dispatch => {
   if (width % 2 !== 0) midWidth += 1
   if (height % 2 !== 0) midHeight += 1
 
-  const team = {
+  const home = {
     name: 'Home',
     guys: [
       {
-        id: 0,
+        id: 10,
         name: 'Left Back',
         loc: `${Math.floor(width / 12)}, ${Math.floor(height / 3)}`
       },
       {
-        id: 1,
+        id: 11,
         name: 'Right Back',
         loc: `${Math.floor(width / 12)}, ${Math.floor((height / 3) * 2) + 1}`
       },
       {
-        id: 2,
+        id: 12,
         name: 'Midfielder',
         loc: `${Math.floor(width / 4)}, ${Math.floor(height / 2)}`
       },
       {
-        id: 3,
+        id: 13,
         name: 'Left Forward',
         loc: `${Math.floor((width / 2) - 1)}, ${1}`
       },
       {
-        id: 4,
+        id: 14,
         name: 'Striker',
         loc: `${Math.floor((width / 2) - 1)}, ${Math.floor(height / 2)}`
       },
       {
-        id: 5,
+        id: 15,
         name: 'Right Forward',
         loc: `${Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2) + 1}`
       },
     ]
   }
+
+  const away = {
+    name: 'Away',
+    guys: [
+      {
+        id: 20,
+        name: 'Left Back',
+        loc: `${width - Math.floor(width / 12)}, ${Math.floor(height / 3)}`
+      },
+      {
+        id: 21,
+        name: 'Right Back',
+        loc: `${width - Math.floor(width / 12)}, ${Math.floor((height / 3) * 2) + 1}`
+      },
+      {
+        id: 22,
+        name: 'Midfielder',
+        loc: `${width - Math.floor(width / 4)}, ${Math.floor(height / 2)}`
+      },
+      {
+        id: 23,
+        name: 'Left Forward',
+        loc: `${width - Math.floor((width / 2) - 1)}, ${1}`
+      },
+      {
+        id: 24,
+        name: 'Striker',
+        loc: `${width - Math.floor((width / 2) - 1)}, ${Math.floor(height / 2)}`
+      },
+      {
+        id: 25,
+        name: 'Right Forward',
+        loc: `${width - Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2) + 1}`
+      },
+    ]
+  }
+
+  const teams = { home, away }
+  const allPlayers = [...home.guys, ...away.guys]
 
   // const spaces = {}
   // let ballLocation
@@ -118,10 +157,13 @@ export const buildField = (width, height) => dispatch => {
           hasPlayer: ''
         })
       } else {
-        let player = team.guys.filter(guy => {
-          if (guy.loc === `${w}, ${h}`) {
-            return guy
-          }
+        // let player = allPlayers.filter(guy => {
+        //   if (guy.loc === `${w}, ${h}`) {
+        //     return guy
+        //   }
+        // })
+        let player = allPlayers.filter(guy => {
+          return guy.loc === `${w}, ${h}`
         })
 
         if (player.length) {
@@ -143,7 +185,7 @@ export const buildField = (width, height) => dispatch => {
     }
   }
 
-  axios.post(`/api/game/`, {spaces, ballLocation, team})
+  axios.post(`/api/game/`, {spaces, ballLocation, teams})
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
