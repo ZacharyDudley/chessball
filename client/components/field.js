@@ -154,7 +154,6 @@ class Field extends Component {
       document.querySelector(`[coords="${x},${y + 1}"]`),
       document.querySelector(`[coords="${x + 1},${y + 1}"]`),
     ]
-
     const distanceTwo = [
       document.querySelector(`[coords="${x - 2},${y - 2}"]`),
       document.querySelector(`[coords="${x},${y - 2}"]`),
@@ -194,11 +193,6 @@ class Field extends Component {
         }
       })
     } else if (action === 'remove') {
-      // neighbors.forEach(neighborSpace => {
-      //   if (neighborSpace) {
-      //     neighborSpace.classList.remove('neighbor')
-      //   }
-      // })
       const allNeighbors = document.getElementsByClassName('neighbor')
 
       while (allNeighbors.length) {
@@ -261,7 +255,7 @@ class Field extends Component {
         this.props.playerAction(selectedSpace, space)
       }
 
-      if (selectedSpace.id === this.props.ballLocationId) {
+      if (selectedSpace.id === this.props.ball.locationId) {
         this.getNeighbors(selectedSpace.coords, 'remove')
         this.props.ballAction(selectedSpace, space)
       }

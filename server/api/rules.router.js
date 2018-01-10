@@ -40,7 +40,7 @@ router.put('/:gameId/movePlayer', function (req, res, next) {
 router.put('/:gameId/moveBall', function (req, res, next) {
 
   let updates = {}
-  updates[`/ballLocation`] = req.body.newSpace.id
+  updates[`/ball/locationId`] = req.body.newSpace.id
   updates[`/spaces/${req.body.oldSpace.id}/hasBall`] = false
   updates[`/spaces/${req.body.newSpace.id}/hasBall`] = true
 
@@ -48,7 +48,10 @@ router.put('/:gameId/moveBall', function (req, res, next) {
   //CHECK IF SPACES ARE NEIGHBORS
   if (isValidMove(req.body.oldSpace, req.body.newSpace)) {
     firebase.ref(`/${req.params.gameId}`).update(updates)
-    .then(snap => res.sendStatus(200))
+    .then(snap => {
+      console.log('BALL SNAP DATA', res.data)
+      res.sendStatus(200)
+    })
     .catch(err => next(err))
   } else {
     console.log('BALL not updated')
