@@ -141,10 +141,10 @@ class Field extends Component {
     // send data to move ball route
   }
 
-  getNeighbors(spaceCoords, action) {
+  getNeighbors(spaceCoords, action, distance = 1) {
     let [x, y] = spaceCoords
 
-    const neighbors = [
+    const distanceOne = [
       document.querySelector(`[coords="${x - 1},${y - 1}"]`),
       document.querySelector(`[coords="${x},${y - 1}"]`),
       document.querySelector(`[coords="${x + 1},${y - 1}"]`),
@@ -155,6 +155,38 @@ class Field extends Component {
       document.querySelector(`[coords="${x + 1},${y + 1}"]`),
     ]
 
+    const distanceTwo = [
+      document.querySelector(`[coords="${x - 2},${y - 2}"]`),
+      document.querySelector(`[coords="${x},${y - 2}"]`),
+      document.querySelector(`[coords="${x + 2},${y - 2}"]`),
+      document.querySelector(`[coords="${x - 2},${y}"]`),
+      document.querySelector(`[coords="${x + 2},${y}"]`),
+      document.querySelector(`[coords="${x - 2},${y + 2}"]`),
+      document.querySelector(`[coords="${x},${y + 2}"]`),
+      document.querySelector(`[coords="${x + 2},${y + 2}"]`),
+    ]
+
+    const distanceThree = [
+      document.querySelector(`[coords="${x - 3},${y - 3}"]`),
+      document.querySelector(`[coords="${x},${y - 3}"]`),
+      document.querySelector(`[coords="${x + 3},${y - 3}"]`),
+      document.querySelector(`[coords="${x - 3},${y}"]`),
+      document.querySelector(`[coords="${x + 3},${y}"]`),
+      document.querySelector(`[coords="${x - 3},${y + 3}"]`),
+      document.querySelector(`[coords="${x},${y + 3}"]`),
+      document.querySelector(`[coords="${x + 3},${y + 3}"]`),
+    ]
+
+    let neighbors
+
+    if (distance === 1) {
+      neighbors = distanceOne
+    } else if (distance === 2) {
+      neighbors = [...distanceOne, ...distanceTwo]
+    } else if (distance === 3) {
+      neighbors = [...distanceOne, ...distanceTwo, ...distanceThree]
+    }
+
     if (action === 'add') {
       neighbors.forEach(neighborSpace => {
         if (neighborSpace && !neighborSpace.classList.contains('player')) {
@@ -162,12 +194,17 @@ class Field extends Component {
         }
       })
     } else if (action === 'remove') {
-      neighbors.forEach(neighborSpace => {
-        if (neighborSpace) {
-          neighborSpace.classList.remove('neighbor')
-        }
-      })
-    }
+      // neighbors.forEach(neighborSpace => {
+      //   if (neighborSpace) {
+      //     neighborSpace.classList.remove('neighbor')
+      //   }
+      // })
+      const allNeighbors = document.getElementsByClassName('neighbor')
+
+      while (allNeighbors.length) {
+        allNeighbors[0].classList.remove('neighbor')
+      }
+  }
   }
 
   handleClick(space) {
@@ -218,7 +255,7 @@ class Field extends Component {
       if (spaceDiv.classList.contains('ball')) {
         this.getNeighbors(selectedSpace.coords, 'remove')
         this.setState({selectedSpace: space})
-        this.getNeighbors(space.coords, 'add')
+        this.getNeighbors(space.coords, 'add', 3)
       } else {
         this.getNeighbors(selectedSpace.coords, 'remove')
         this.props.playerAction(selectedSpace, space)
@@ -267,9 +304,6 @@ class Field extends Component {
 
   render() {
     const { spaces } = this.props
-    console.log('BALL State', this.state.ball)
-    console.log('Selected Space', this.state.selectedSpace)
-    //DO HIGHLIGHTING HERE
 
     return (
       <div className="field">
@@ -302,7 +336,8 @@ const mapState = (state, ownProps) => {
   return {
     gameId: state.field.id,
     spaces: state.field.spaces,
-    ballLocationId: state.field.ballLocation,
+    // ballLocationId: state.field.ball.locationId,
+    ball: state.field.ball,
     teamId: state.team
   }
 }

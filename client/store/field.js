@@ -4,7 +4,7 @@ import history from '../history'
 // INITIAL STATE
 
 const defaultState = {
-  id: '',
+  // id: '',
   spaces: []
 }
 
@@ -81,7 +81,7 @@ export const buildField = (width, height) => dispatch => {
       {
         id: 22,
         name: 'Midfielder',
-        loc: `${width - Math.floor(width / 4)}, ${Math.floor(height / 2)}`
+        loc: `${width - Math.floor(width / 4) + 2}, ${Math.floor(height / 2)}`
       },
       {
         id: 23,
@@ -91,7 +91,7 @@ export const buildField = (width, height) => dispatch => {
       {
         id: 24,
         name: 'Striker',
-        loc: `${width - Math.floor((width / 2) - 1)}, ${Math.floor(height / 2)}`
+        loc: `${width - Math.floor((width / 2) - 2)}, ${Math.floor(height / 2)}`
       },
       {
         id: 25,
@@ -142,13 +142,17 @@ export const buildField = (width, height) => dispatch => {
   // }
 
   const spaces = []
-  let ballLocation
+  let ball = {
+    locationId: '',
+    velocity: '',
+    direction: '',
+  }
   var i = 0
 
   for (var h = 0; h <= height; h++) {
     for (var w = 0; w <= width; w++) {
       if (w === midWidth && h === midHeight) {
-        ballLocation = i
+        ball.locationId = i
 
         spaces.push({
           id: i++,
@@ -185,7 +189,7 @@ export const buildField = (width, height) => dispatch => {
     }
   }
 
-  axios.post(`/api/game/`, {spaces, ballLocation, teams})
+  axios.post(`/api/game/`, {spaces, ball, teams})
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
