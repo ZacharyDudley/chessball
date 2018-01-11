@@ -141,14 +141,14 @@ class Field extends Component {
 
     let everything = [
       [
-        'leftUp',
-        'centerUp',
-        'rightUp',
-        'leftCenter',
-        'rightCenter',
-        'leftDown',
-        'centerDown',
-        'rightDown',
+        'leftUp',       // [x-, y-]
+        'centerUp',     // [x , y-]
+        'rightUp',      // [x+, y-]
+        'leftCenter',   // [x-, y]
+        'rightCenter',  // [x+, y]
+        'leftDown',     // [x-, y+]
+        'centerDown',   // [x , y+]
+        'rightDown',    // [x+, y+]
       ], [
         `[coords="${x - 1},${y - 1}"]`,
         `[coords="${x},${y - 1}"]`,
@@ -206,68 +206,6 @@ class Field extends Component {
       })
   }
 
-
-  // getNeighbors(spaceCoords, action, distance = 1) {
-  //   let [x, y] = spaceCoords
-
-  //   const distanceOne = [
-  //     document.querySelector(`[coords="${x - 1},${y - 1}"]`),
-  //     document.querySelector(`[coords="${x},${y - 1}"]`),
-  //     document.querySelector(`[coords="${x + 1},${y - 1}"]`),
-  //     document.querySelector(`[coords="${x - 1},${y}"]`),
-  //     document.querySelector(`[coords="${x + 1},${y}"]`),
-  //     document.querySelector(`[coords="${x - 1},${y + 1}"]`),
-  //     document.querySelector(`[coords="${x},${y + 1}"]`),
-  //     document.querySelector(`[coords="${x + 1},${y + 1}"]`),
-  //   ]
-
-  //   const distanceTwo = [
-  //     document.querySelector(`[coords="${x - 2},${y - 2}"]`),
-  //     document.querySelector(`[coords="${x},${y - 2}"]`),
-  //     document.querySelector(`[coords="${x + 2},${y - 2}"]`),
-  //     document.querySelector(`[coords="${x - 2},${y}"]`),
-  //     document.querySelector(`[coords="${x + 2},${y}"]`),
-  //     document.querySelector(`[coords="${x - 2},${y + 2}"]`),
-  //     document.querySelector(`[coords="${x},${y + 2}"]`),
-  //     document.querySelector(`[coords="${x + 2},${y + 2}"]`),
-  //   ]
-
-  //   const distanceThree = [
-  //     document.querySelector(`[coords="${x - 3},${y - 3}"]`),
-  //     document.querySelector(`[coords="${x},${y - 3}"]`),
-  //     document.querySelector(`[coords="${x + 3},${y - 3}"]`),
-  //     document.querySelector(`[coords="${x - 3},${y}"]`),
-  //     document.querySelector(`[coords="${x + 3},${y}"]`),
-  //     document.querySelector(`[coords="${x - 3},${y + 3}"]`),
-  //     document.querySelector(`[coords="${x},${y + 3}"]`),
-  //     document.querySelector(`[coords="${x + 3},${y + 3}"]`),
-  //   ]
-
-  //   let neighbors
-
-  //   if (distance === 1) {
-  //     neighbors = distanceOne
-  //   } else if (distance === 2) {
-  //     neighbors = [...distanceOne, ...distanceTwo]
-  //   } else if (distance === 3) {
-  //     neighbors = [...distanceOne, ...distanceTwo, ...distanceThree]
-  //   }
-
-  //   if (action === 'add') {
-  //     neighbors.forEach(neighborSpace => {
-  //       if (neighborSpace && !neighborSpace.classList.contains('player')) {
-  //         neighborSpace.classList.add('neighbor')
-  //       }
-  //     })
-  //   } else if (action === 'remove') {
-  //     const allNeighbors = document.getElementsByClassName('neighbor')
-
-  //     while (allNeighbors.length) {
-  //       allNeighbors[0].classList.remove('neighbor')
-  //     }
-  //   }
-  // }
-
   handleClick(space) {
     const { selectedSpace } = this.state
     const selectedDivs = document.getElementsByClassName('selected')
@@ -313,23 +251,26 @@ class Field extends Component {
 
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
+
+      /* -------------- MOVE BALL --------------- */
+      if (selectedSpace.id === this.props.ball.locationId) {
+        this.clearHighlightedNeighbors()
+        this.props.ballAction(selectedSpace, space)
+      }
+
       if (spaceDiv.classList.contains('ball')) {
         // this.getNeighbors(selectedSpace.coords, 'remove')
         this.clearHighlightedNeighbors()
         this.setState({selectedSpace: space})
         // this.getNeighbors(space.coords, 'add', 3)
         this.getValidNeighbors(space.coords, 3)
-      } else {
-        // this.getNeighbors(selectedSpace.coords, 'remove')
-        this.clearHighlightedNeighbors()
-        this.props.playerAction(selectedSpace, space)
       }
+      // else {
+        // this.getNeighbors(selectedSpace.coords, 'remove')
+// this.clearHighlightedNeighbors()
+// this.props.playerAction(selectedSpace, space)
+      // }
 
-      if (selectedSpace.id === this.props.ball.locationId) {
-        // this.getNeighbors(selectedSpace.coords, 'remove')
-        this.clearHighlightedNeighbors()
-        this.props.ballAction(selectedSpace, space)
-      }
     }
 
     // PLACE SELECTED CURSOR ON SPACE

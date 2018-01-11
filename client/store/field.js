@@ -159,7 +159,7 @@ export const buildField = (width, height) => dispatch => {
           spaces.push({
             id: i++,
             coords: [w, h],
-            type: 'space',
+            type: '',
             typeId: '',
             line: ''
           })
