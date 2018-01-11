@@ -396,15 +396,11 @@ class Field extends Component {
         spaces && spaces.map(space => {
           return (<div
             className={
-              // // space.hasBall ? 'space ball'
-              // //   : space.hasPlayer ? 'space player' : 'space'
-              // space.hasBall ? 'space ball'
-              //   : !space.hasPlayer ? 'space'
-              //   : space.hasPlayer >= 20 ? 'space player away' : 'space player home'
-              space.type === 'ball' ? 'space ball'
-                : space.type === 'home' ? 'space home'
-                : space.type === 'away' ? 'space away'
-                : 'space'
+              `space ${space.line ? 'line' : ''} ${space.type}`
+              // space.type === 'ball' ? 'space ball'
+              //   : space.type === 'home' ? 'space home'
+              //   : space.type === 'away' ? 'space away'
+              //   : 'space'
             }
             key={space.id}
             id={space.id}

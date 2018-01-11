@@ -4,7 +4,9 @@ import history from '../history'
 // INITIAL STATE
 
 const defaultState = {
-  // id: '',
+  id: '',
+  axisLengthX: '',
+  axisLengthY: '',
   spaces: []
 }
 
@@ -23,6 +25,8 @@ export const updateScore = score => ({type: UPDATE_SCORE, score})
 // THUNK
 
 export const buildField = (width, height) => dispatch => {
+  let axisLengthX = width
+  let axisLengthY = height
   let midWidth = width / 2
   let midHeight = height / 2
 
@@ -120,7 +124,7 @@ export const buildField = (width, height) => dispatch => {
   let ball = {
     locationId: '',
     coords: '',
-    velocity: '',
+    velocity: 0,
     direction: '',
   }
   var i = 0
@@ -135,8 +139,8 @@ export const buildField = (width, height) => dispatch => {
           id: i++,
           coords: [w, h],
           type: 'ball',
-          typeId: ''
-          // hasBall: true,
+          typeId: '',
+          line: ''
         })
       } else {
         let player = allPlayers.filter(guy => {
@@ -148,25 +152,23 @@ export const buildField = (width, height) => dispatch => {
             id: i++,
             coords: [w, h],
             type: `${player[0].team}`,
-            typeId: `${player[0].id}`
-            // hasBall: false,
-            // hasPlayer: `${player[0].id}`
+            typeId: `${player[0].id}`,
+            line: ''
           })
         } else {
           spaces.push({
             id: i++,
             coords: [w, h],
             type: 'space',
-            typeId: ''
-            // hasBall: false,
-            // hasPlayer: ''
+            typeId: '',
+            line: ''
           })
         }
       }
     }
   }
 
-  axios.post(`/api/game/`, {spaces, ball, teams})
+  axios.post(`/api/game/`, {spaces, ball, teams, axisLengthX, axisLengthY})
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
