@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getField, movePlayer, moveBall } from '../store'
+import { getPath } from '../functions'
 
 import '../css/field.scss';
 
@@ -206,6 +207,12 @@ class Field extends Component {
       })
   }
 
+  getSpaceIdFromCoords(coords) {
+    let [x, y] = coords
+    let id = document.querySelector(`[coords="${x},${y}"]`).id
+    return +id
+  }
+
   handleClick(space) {
     const { selectedSpace } = this.state
     const selectedDivs = document.getElementsByClassName('selected')
@@ -251,25 +258,22 @@ class Field extends Component {
 
     // IF NEIGHBOR SPACE IS CLICKED
     if (spaceDiv.classList.contains('neighbor')) {
-
       /* -------------- MOVE BALL --------------- */
       if (selectedSpace.id === this.props.ball.locationId) {
         this.clearHighlightedNeighbors()
-        this.props.ballAction(selectedSpace, space)
-      }
-
-      if (spaceDiv.classList.contains('ball')) {
-        // this.getNeighbors(selectedSpace.coords, 'remove')
+        let pathIds = getPath(selectedSpace, space).map(coord => {
+          return this.getSpaceIdFromCoords(coord)
+        })
+        this.props.ballAction(selectedSpace.id, space.id, pathIds)
+      } else if (spaceDiv.classList.contains('ball')) {
         this.clearHighlightedNeighbors()
         this.setState({selectedSpace: space})
         // this.getNeighbors(space.coords, 'add', 3)
         this.getValidNeighbors(space.coords, 3)
+      } else {
+        this.clearHighlightedNeighbors()
+        this.props.playerAction(selectedSpace, space)
       }
-      // else {
-        // this.getNeighbors(selectedSpace.coords, 'remove')
-// this.clearHighlightedNeighbors()
-// this.props.playerAction(selectedSpace, space)
-      // }
 
     }
 
@@ -375,11 +379,11 @@ const mapDispatch = (dispatch, ownProps) => {
     getBoard: () => {
       dispatch(getField(gameId))
     },
-    playerAction: (oldSpace, newSpace) => {
-      dispatch(movePlayer(gameId, oldSpace, newSpace))
+    playerAction: (spaceStart, spaceEnd) => {
+      dispatch(movePlayer(gameId, spaceStart, spaceEnd))
     },
-    ballAction: (oldSpace, newSpace) => {
-      dispatch(moveBall(gameId, oldSpace, newSpace))
+    ballAction: (spaceStartId, spaceEndId, spacesPathId) => {
+      dispatch(moveBall(gameId, spaceStartId, spaceEndId, spacesPathId))
     }
   }
 }

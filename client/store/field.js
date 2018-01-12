@@ -123,7 +123,7 @@ export const buildField = (width, height) => dispatch => {
   const spaces = []
   let ball = {
     locationId: '',
-    coords: '',
+    coords: [],
     velocity: 0,
     direction: '',
   }
@@ -133,7 +133,7 @@ export const buildField = (width, height) => dispatch => {
     for (var w = 0; w <= width; w++) {
       if (w === midWidth && h === midHeight) {
         ball.locationId = i
-        ball.coords = `${w}, ${h}`
+        ball.coords = [w, h]
 
         spaces.push({
           id: i++,
@@ -185,8 +185,8 @@ export const movePlayer = (gameId, oldSpace, newSpace) => dispatch => {
   .catch(err => console.error(`Updating player unsuccessful`, err));
 }
 
-export const moveBall = (gameId, oldSpace, newSpace) => dispatch => {
-  axios.put(`/api/rules/${gameId}/moveBall`, {oldSpace, newSpace})
+export const moveBall = (gameId, spaceStartId, spaceEndId, spacesPathIds) => dispatch => {
+  axios.put(`/api/rules/${gameId}/moveBall`, {spaceStartId, spaceEndId, spacesPathIds})
   .then(res => dispatch(getField(gameId)))
   .catch(err => console.error(`Updating ball unsuccessful`, err));
 }

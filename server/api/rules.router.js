@@ -10,7 +10,7 @@ const isChosenSpaceFree = spaceEnd => {
   return spaceEnd.type === ''
 }
 
-const isValidDirection = (spaceStart, spaceEnd) => {
+const isDirectionValid = (spaceStart, spaceEnd) => {
   const [ startX, startY ] = spaceStart.coords
   const [ endX, endY ] = spaceEnd.coords
 
@@ -32,62 +32,61 @@ const isValidDirection = (spaceStart, spaceEnd) => {
   return possibilities.includes([deltaX, deltaY])
 }
 
-const getDirection = (spaceStart, spaceEnd) => {
-  const [ startX, startY ] = spaceStart.coords
-  const [ endX, endY ] = spaceEnd.coords
-  let dirX, dirY
-
-  if (startX > endX) {
-    dirX = 'left'
-  } else if (startX < endX) {
-    dirX = 'right'
-  } else {
-    dirX = 'center'
-  }
-
-  if (startY > endY) {
-    dirY = 'up'
-  } else if (startY < endY) {
-    dirY = 'down'
-  } else {
-    dirY = 'center'
-  }
-
-  return [dirX, dirY].join('-')
-}
-
-const getPath = (spaceStart, dir, dist) => {
-  let [ startX, startY ] = spaceStart.coords
-
-  const direction = {
-    'left-up':       [ -1, -1 ],
-    'center-up':     [ 0, -1 ],
-    'right-up':      [ 1, -1 ],
-    'left-center':   [ -1, 0 ],
-    'right-center':  [ 1, 0 ],
-    'left-down':     [ -1, 1 ],
-    'center-down':   [ 0, 1 ],
-    'right-down':    [ 1, 1 ],
-  }
-
-  const rightDir = direction[dir]
-  const spacesInPath = []
-
-  for (var i = 0; i < dist; i++) {
-    startX += rightDir[0]
-    startY += rightDir[1]
-    spacesInPath.push([startX, startY])
-  }
-
-  return spacesInPath
-}
-
 const isValidBallMove = (spaceStart, spaceEnd, ball) => {
   return isBallOriginValid(spaceStart, ball)
-    && isValidDirection(spaceStart, spaceEnd)
+    && isDirectionValid(spaceStart, spaceEnd)
     && isChosenSpaceFree(spaceEnd)
-    // && isPathClear()
 }
+
+// const getDirection = (spaceStart, spaceEnd) => {
+//   const [ startX, startY ] = spaceStart.coords
+//   const [ endX, endY ] = spaceEnd.coords
+//   let dirX, dirY
+
+//   if (startX > endX) {
+//     dirX = 'left'
+//   } else if (startX < endX) {
+//     dirX = 'right'
+//   } else {
+//     dirX = 'center'
+//   }
+
+//   if (startY > endY) {
+//     dirY = 'up'
+//   } else if (startY < endY) {
+//     dirY = 'down'
+//   } else {
+//     dirY = 'center'
+//   }
+
+//   return [dirX, dirY].join('-')
+// }
+
+// const getPath = (spaceStart, dir, dist) => {
+//   let [ startX, startY ] = spaceStart.coords
+
+//   const direction = {
+//     'left-up':       [ -1, -1 ],
+//     'center-up':     [ 0, -1 ],
+//     'right-up':      [ 1, -1 ],
+//     'left-center':   [ -1, 0 ],
+//     'right-center':  [ 1, 0 ],
+//     'left-down':     [ -1, 1 ],
+//     'center-down':   [ 0, 1 ],
+//     'right-down':    [ 1, 1 ],
+//   }
+
+//   const rightDir = direction[dir]
+//   const spacesInPath = []
+
+//   for (var i = 0; i < dist; i++) {
+//     startX += rightDir[0]
+//     startY += rightDir[1]
+//     spacesInPath.push([startX, startY])
+//   }
+
+//   return spacesInPath
+// }
 
 const isSpaceNeighbor = (oldSpaceCoords, newSpaceCoords) => {
   return (
@@ -99,10 +98,11 @@ const isSpaceNeighbor = (oldSpaceCoords, newSpaceCoords) => {
 }
 
 
-const isValidMove = (oldSpace, newSpace) => {
+const isValidPlayerMove = (oldSpace, newSpace) => {
   return isSpaceNeighbor(oldSpace.coords, newSpace.coords) && isChosenSpaceFree(newSpace)
 }
 
+/*  ***  PLAYER MOVEMENT ***  */
 router.put('/:gameId/movePlayer', function (req, res, next) {
 
   let updates = {}
@@ -113,7 +113,7 @@ router.put('/:gameId/movePlayer', function (req, res, next) {
 
 
   //CHECK IF SPACES ARE NEIGHBORS
-  if (isValidMove(req.body.oldSpace, req.body.newSpace)) {
+  if (isValidPlayerMove(req.body.oldSpace, req.body.newSpace)) {
     firebase.ref(`/${req.params.gameId}`).update(updates)
     .then(snap => res.sendStatus(200))
     .catch(err => next(err))
@@ -123,27 +123,84 @@ router.put('/:gameId/movePlayer', function (req, res, next) {
 
 })
 
+
+/*  ***  BALL MOVEMENT ***  */
 router.put('/:gameId/moveBall', function (req, res, next) {
-  let oldSpace, newSpace, ball
-
-  firebase.ref(`${req.params.gameId}`).once('value')
-  .then(snap => {
-    oldSpace = snap.val().spaces[`${req.body.oldSpace.id}`]
-    newSpace = snap.val().spaces[`${req.body.newSpace.id}`]
-    ball = snap.val().ball
-
-    console.log('OLD', oldSpace)
-    console.log('NEW', newSpace)
-    console.log('BALL', ball)
-  })
 
   let updates = {}
-  updates[`/ball/locationId`] = req.body.newSpace.id
-  updates[`/spaces/${req.body.oldSpace.id}/type`] = ''
-  updates[`/spaces/${req.body.newSpace.id}/type`] = 'ball'
+  const game = firebase.ref(`${req.params.gameId}`)
+
+  game.once('value')
+  .then(snap => {
+    const spaceStart = snap.val().spaces[`${req.body.spaceStartId}`]
+    const ball = snap.val().ball
+    let spacesInPath = req.body.spacesPathIds.map(space => {
+      return snap.val().spaces[space]
+    });
+
+    for (var i = 0; i < spacesInPath.length; i++) {
+      if (spacesInPath[i].type) {
+        console.log('BLOCKED HERE: ', spacesInPath[i])
+        break
+      }
+      console.log('OKAY: ', spacesInPath[i])
+    }
+    const spaceEnd = spacesInPath[i - 1]
+
+    console.log('END GOAL: ', snap.val().spaces[`${req.body.spaceEndId}`])
+    console.log('BLOCK: ', spaceEnd)
+
+    updates[`/ball/locationId`] = spaceEnd.id
+    updates[`/ball/coords`] = spaceEnd.coords
+    updates[`/spaces/${req.body.spaceStartId}/type`] = ''
+    updates[`/spaces/${spaceEnd.id}/type`] = 'ball'
+
+    return updates
+  })
+  .then(newData => {
+    game.update(newData)
+    .then(snap => res.sendStatus(200))
+    .catch(err => next(err))
+  })
+
+// firebase.ref(`${req.params.gameId}`).once('value')
+  // .then(snap => {
+  //   const spaceStart = snap.val().spaces[`${req.body.spaceStartId}`]
+  //   const ball = snap.val().ball
+  //   let spacesInPath = req.body.spacesPathIds.map(space => {
+  //     return snap.val().spaces[space]
+  //   });
+
+  //   for (var i = 0; i < spacesInPath.length; i++) {
+  //     if (spacesInPath[i].type) {
+  //       console.log('BLOCKED HERE: ', spacesInPath[i])
+  //       break
+  //     }
+  //     console.log('OKAY: ', spacesInPath[i])
+  //   }
+  //   const spaceEnd = spacesInPath[i - 1]
+
+  //   console.log('END GOAL: ', snap.val().spaces[`${req.body.spaceEndId}`])
+  //   console.log('BLOCK: ', spaceEnd)
+
+  //   let updates = {}
+  //   updates[`/ball/locationId`] = spaceEnd.id
+  //   updates[`/spaces/${req.body.spaceStartId}/type`] = ''
+  //   updates[`/spaces/${spaceEnd.id}/type`] = 'ball'
+
+  //   return updates
+  // })
+
+
+
+
+
+
+
+
 
   // firebase.ref(`${req.params.gameId}/spaces`).transaction(spaces => {
-  //   return (spaces[`${req.body.oldSpace.id}`], spaces[`${req.body.newSpace.id}`])
+  //   return (spaces[`${req.body.spaceStart.id}`], spaces[`${req.body.spaceEnd.id}`])
   // })
   // .then(snap => {
   //   console.log(snap)
@@ -151,7 +208,7 @@ router.put('/:gameId/moveBall', function (req, res, next) {
   // .catch(err => next(err))
 
   // //CHECK IF SPACES ARE NEIGHBORS
-  // if (isValidMove(req.body.oldSpace, req.body.newSpace)) {
+  // if (isValidMove(req.body.spaceStart, req.body.spaceEnd)) {
   //   firebase.ref(`/${req.params.gameId}`).update(updates)
   //   .then(snap => {
   //     console.log('BALL SNAP DATA', res.data)
