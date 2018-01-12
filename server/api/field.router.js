@@ -8,7 +8,10 @@ const router = require('express').Router()
 
 router.get('/:gameId', function (req, res, next) {
   firebase.ref(`/${req.params.gameId}`).once('value')
-  .then(snap => res.status(200).send(snap.val()))
+  .then(snap => {
+    let newSnap = Object.assign({}, snap.val(), {id: snap.key})
+    res.status(200).send(newSnap)
+  })
   .catch(err => next(err))
 })
 

@@ -2,8 +2,17 @@
   display: flex;
   flex-wrap: wrap;
 
-  width: 16rem;
+  // 8 x 12
+  // width: 16rem;
+  // height: 7rem;
+
+  // 20 x 12
+  width: 26rem;
   height: 7rem;
+
+  // 16 x 24
+  // width: 31rem;
+  // height: 7rem;
 
 }
 
@@ -14,6 +23,10 @@
   border-style: solid;
   border-width: 0.1rem;
   border-color: black;
+
+  &.line {
+    background: rgb(160, 160, 160);
+  }
 
   &:hover {
     background: rgb(105, 240, 154);
