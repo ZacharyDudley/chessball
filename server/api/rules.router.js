@@ -16,7 +16,7 @@ const isDirectionValid = (spaceStart, spaceEnd) => {
 
   const deltaX = Math.abs(startX - endX)
   const deltaY = Math.abs(startY - endY)
-
+  const searchVar = [1, 1]
   const possibilities = [
     [0, 3],
     [0, 2],
@@ -29,7 +29,9 @@ const isDirectionValid = (spaceStart, spaceEnd) => {
     [3, 0],
   ]
 
-  return possibilities.includes([deltaX, deltaY])
+  return !!possibilities.find(coord => {
+    return coord[0] === deltaX && coord[1] === deltaY
+  })
 }
 
 const isValidBallMove = (spaceStart, spaceEnd, ball) => {
@@ -133,35 +135,36 @@ router.put('/:gameId/moveBall', function (req, res, next) {
   game.once('value')
   .then(snap => {
     const spaceStart = snap.val().spaces[`${req.body.spaceStartId}`]
+    let spaceEnd = snap.val().spaces[`${req.body.spaceEndId}`]
     const ball = snap.val().ball
     let spacesInPath = req.body.spacesPathIds.map(space => {
       return snap.val().spaces[space]
     });
 
-    for (var i = 0; i < spacesInPath.length; i++) {
-      if (spacesInPath[i].type) {
-        console.log('BLOCKED HERE: ', spacesInPath[i])
-        break
+    if (isValidBallMove(spaceStart, spaceEnd, ball)) {
+      for (var i = 0; i < spacesInPath.length; i++) {
+        if (spacesInPath[i].type) {
+          break
+        }
       }
-      console.log('OKAY: ', spacesInPath[i])
+      spaceEnd = spacesInPath[i - 1]
+
+      updates[`/ball/locationId`] = spaceEnd.id
+      updates[`/ball/coords`] = spaceEnd.coords
+      updates[`/spaces/${req.body.spaceStartId}/type`] = ''
+      updates[`/spaces/${spaceEnd.id}/type`] = 'ball'
+
+      return updates
+    } else {
+      console.log('INVALID MOVE')
     }
-    const spaceEnd = spacesInPath[i - 1]
-
-    console.log('END GOAL: ', snap.val().spaces[`${req.body.spaceEndId}`])
-    console.log('BLOCK: ', spaceEnd)
-
-    updates[`/ball/locationId`] = spaceEnd.id
-    updates[`/ball/coords`] = spaceEnd.coords
-    updates[`/spaces/${req.body.spaceStartId}/type`] = ''
-    updates[`/spaces/${spaceEnd.id}/type`] = 'ball'
-
-    return updates
   })
   .then(newData => {
     game.update(newData)
     .then(snap => res.sendStatus(200))
     .catch(err => next(err))
   })
+  .catch(err => next(err))
 
 // firebase.ref(`${req.params.gameId}`).once('value')
   // .then(snap => {

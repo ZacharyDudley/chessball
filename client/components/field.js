@@ -382,8 +382,8 @@ const mapDispatch = (dispatch, ownProps) => {
     playerAction: (spaceStart, spaceEnd) => {
       dispatch(movePlayer(gameId, spaceStart, spaceEnd))
     },
-    ballAction: (spaceStartId, spaceEndId, spacesPathId) => {
-      dispatch(moveBall(gameId, spaceStartId, spaceEndId, spacesPathId))
+    ballAction: (spaceStartId, spaceEndId, spacesPathIds) => {
+      dispatch(moveBall(gameId, spaceStartId, spaceEndId, spacesPathIds))
     }
   }
 }
