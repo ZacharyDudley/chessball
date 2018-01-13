@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getField, movePlayer, moveBall } from '../store'
 import { getPath } from '../functions'
+import { InfoGUI } from '../components'
 
 import '../css/field.scss';
 
@@ -336,27 +337,30 @@ class Field extends Component {
     const { spaces } = this.props
 
     return (
-      <div className="field">
-      {
-        spaces && spaces.map(space => {
-          return (<div
-            className={
-              `space ${space.line ? 'line' : ''} ${space.type}`
-              // space.type === 'ball' ? 'space ball'
-              //   : space.type === 'home' ? 'space home'
-              //   : space.type === 'away' ? 'space away'
-              //   : 'space'
+      <div className="fieldContainer">
+        <div className="field">
+        {
+          spaces && spaces.map(space => {
+            return (<div
+              className={
+                `space ${space.line ? 'line' : ''} ${space.type}`
+                // space.type === 'ball' ? 'space ball'
+                //   : space.type === 'home' ? 'space home'
+                //   : space.type === 'away' ? 'space away'
+                //   : 'space'
+              }
+              key={space.id}
+              id={space.id}
+              coords={space.coords}
+              onClick={() => {
+                this.handleClick(space)
+              }
             }
-            key={space.id}
-            id={space.id}
-            coords={space.coords}
-            onClick={() => {
-              this.handleClick(space)
-            }
-          }
-          />)
-        })
-      }
+            />)
+          })
+        }
+        </div>
+        <InfoGUI />
       </div>
     )
   }
