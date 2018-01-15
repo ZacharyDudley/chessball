@@ -99,9 +99,12 @@ const isSpaceNeighbor = (oldSpaceCoords, newSpaceCoords) => {
   )
 }
 
+const isActiveTeamPlayer = (spaceStart, homeActive) => {
+  return (homeActive && spaceStart.type === 'home') || (!homeActive && spaceStart.type === 'away')
+}
 
-const isValidPlayerMove = (oldSpace, newSpace) => {
-  return isSpaceNeighbor(oldSpace.coords, newSpace.coords) && isChosenSpaceFree(newSpace)
+const isValidPlayerMove = (oldSpace, newSpace, homeActive) => {
+  return isActiveTeamPlayer(oldSpace, homeActive) && isSpaceNeighbor(oldSpace.coords, newSpace.coords) && isChosenSpaceFree(newSpace)
 }
 
 let updates = {}
@@ -114,11 +117,12 @@ router.use('/:gameId', function (req, res, next) {
   .then(snap => {
     const homeActive = snap.val().state.isHomeTurn
     const movesLeft = snap.val().state.movesLeft
+    const movesPerTurn = snap.val().state.movesPerTurn
 
     if (movesLeft > 1) {
       updates['/state/movesLeft'] = movesLeft - 1
     } else {
-      updates['/state/movesLeft'] = 3
+      updates['/state/movesLeft'] = movesPerTurn
       updates['/state/isHomeTurn'] = !homeActive
     }
 
@@ -136,10 +140,11 @@ router.put('/:gameId/movePlayer', function (req, res, next) {
 
   game.once('value')
   .then(snap => {
+    const homeActive = snap.val().state.isHomeTurn
     const spaceStart = snap.val().spaces[`${req.body.spaceStartId}`]
     let spaceEnd = snap.val().spaces[`${req.body.spaceEndId}`]
 
-    if (isValidPlayerMove(spaceStart, spaceEnd)) {
+    if (isValidPlayerMove(spaceStart, spaceEnd, homeActive)) {
       updates[`/spaces/${req.body.spaceEndId}/type`] = spaceStart.type
       updates[`/spaces/${req.body.spaceEndId}/typeId`] = spaceStart.typeId
       updates[`/spaces/${req.body.spaceStartId}/type`] = ''

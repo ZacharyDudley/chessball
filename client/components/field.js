@@ -345,10 +345,6 @@ class Field extends Component {
             return (<div
               className={
                 `space ${space.line ? 'line' : ''} ${space.type}`
-                // space.type === 'ball' ? 'space ball'
-                //   : space.type === 'home' ? 'space home'
-                //   : space.type === 'away' ? 'space away'
-                //   : 'space'
               }
               key={space.id}
               id={space.id}
@@ -374,11 +370,8 @@ const mapState = (state, ownProps) => {
   return {
     gameId: state.field.id,
     spaces: state.field.spaces,
-    // ballLocationId: state.field.ball.locationId,
     ball: state.field.ball,
     turnState: state.field.state
-    // isHomeTurn: state.field.state.isHomeTurn,
-    // movesLeft: state.field.state.movesLeft
   }
 }
 

@@ -11,14 +11,31 @@ class Stadium extends Component {
     }
   }
 
+  // createGame(event) {
+  //   let movesPerTurn = event.target.movesPerTurn || 3
+  //   let sizeW = 20
+  //   let sizeH = 12
+
+  //   this.props.handleCreateGame(sizeW, sizeH, movesPerTurn)
+  // }
+
   render () {
     const { handleCreateGame } = this.props
-
     let sizeW = 20
     let sizeH = 12
+    let movesPerTurn = 5
 
     return (
-      <button onClick={() => handleCreateGame(sizeW, sizeH)}>CREATE</button>
+      <div>
+      {
+        // <form onSubmit={(event) => handleCreateGame()}>
+        //   <label>Moves Per Turn</label>
+        //   <input name="movesPerTurn" type="number" defaultValue="3" />
+        //     <button type="submit" value="Create Game" />
+        //     </form>
+          }
+          <button onClick={() => handleCreateGame(sizeW, sizeH, movesPerTurn)}>CREATE</button>
+      </div>
     )
   }
 }
@@ -33,8 +50,8 @@ const mapDispatch = (dispatch, ownProps) => {
   // const { gameId } = ownProps
 
   return {
-    handleCreateGame: (sizeW, sizeH) => {
-      dispatch(buildField(sizeW, sizeH))
+    handleCreateGame: (sizeW, sizeH, movesPerTurn) => {
+      dispatch(buildField(sizeW, sizeH, movesPerTurn))
     },
     teams: (gameId, teamSize) => {
       dispatch(buildTeam(gameId, teamSize))

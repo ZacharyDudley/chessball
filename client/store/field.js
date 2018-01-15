@@ -24,7 +24,7 @@ export const updateScore = score => ({type: UPDATE_SCORE, score})
 
 // THUNK
 
-export const buildField = (width, height) => dispatch => {
+export const buildField = (width, height, movesPerTurn) => dispatch => {
   let axisLengthX = width
   let axisLengthY = height
   let midWidth = width / 2
@@ -121,7 +121,8 @@ export const buildField = (width, height) => dispatch => {
 
   const state = {
     isHomeTurn: true,
-    movesLeft: 3,
+    movesPerTurn: movesPerTurn,
+    movesLeft: movesPerTurn,
   }
 
   const teams = { home, away }
