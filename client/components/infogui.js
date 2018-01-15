@@ -15,15 +15,17 @@ const COMPONENT = (props) => {
 
       <div className="players">
         <div className="playerInfo">
-          <h1>HOME</h1>
+          <h1>{props.isHomeTurn ? '>HOME' : 'HOME'}</h1>
           <div className="color home" />
           <h2>0</h2>
+          <h2> Moves: {props.isHomeTurn ? `${props.movesLeft}` : '-'}</h2>
         </div>
 
         <div className="playerInfo">
-          <h1>AWAY</h1>
+          <h1>{props.isHomeTurn ? 'AWAY' : '>AWAY'}</h1>
           <div className="color away" />
           <h2>0</h2>
+          <h2> Moves: {props.isHomeTurn ? '-' : `${props.movesLeft}`}</h2>
         </div>
       </div>
 
@@ -36,6 +38,8 @@ const COMPONENT = (props) => {
  */
 const mapState = (state) => {
   return {
+    isHomeTurn: state.field.state.isHomeTurn,
+    movesLeft: state.field.state.movesLeft
   }
 }
 

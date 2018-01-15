@@ -35,6 +35,7 @@ export const buildField = (width, height) => dispatch => {
 
   const home = {
     name: 'Home',
+    goals: 0,
     guys: [
       {
         id: 10,
@@ -77,6 +78,7 @@ export const buildField = (width, height) => dispatch => {
 
   const away = {
     name: 'Away',
+    goals: 0,
     guys: [
       {
         id: 20,
@@ -115,6 +117,11 @@ export const buildField = (width, height) => dispatch => {
         loc: `${width - Math.floor((width / 2) - 1)}, ${Math.floor((height / 3) * 2) + 1}`
       },
     ]
+  }
+
+  const state = {
+    isHomeTurn: true,
+    movesLeft: 3,
   }
 
   const teams = { home, away }
@@ -168,7 +175,7 @@ export const buildField = (width, height) => dispatch => {
     }
   }
 
-  axios.post(`/api/game/`, {spaces, ball, teams, axisLengthX, axisLengthY})
+  axios.post(`/api/game/`, {spaces, state, ball, teams, axisLengthX, axisLengthY})
   .then(res => dispatch(createGame(res.data)))
   .catch(err => console.error(`Creating game unsuccessful`, err));
 }
@@ -189,6 +196,18 @@ export const moveBall = (gameId, spaceStartId, spaceEndId, spacesPathIds) => dis
   axios.put(`/api/rules/${gameId}/moveBall`, {spaceStartId, spaceEndId, spacesPathIds})
   .then(res => dispatch(getField(gameId)))
   .catch(err => console.error(`Updating ball unsuccessful`, err));
+}
+
+export const takeTurn = (gameId, ballOrPlayer, spaceStartId, spaceEndId, spacesPathIds) => dispatch => {
+  if (ballOrPlayer === 'ball') {
+    axios.put(`/api/rules/${gameId}/moveBall`, {spaceStartId, spaceEndId, spacesPathIds})
+    .then(res => dispatch(getField(gameId)))
+    .catch(err => console.error(`Updating ball unsuccessful`, err));
+  } else if (ballOrPlayer === 'player') {
+    axios.put(`/api/rules/${gameId}/movePlayer`, {spaceStartId, spaceEndId})
+    .then(res => dispatch(getField(gameId)))
+    .catch(err => console.error(`Updating player unsuccessful`, err));
+  }
 }
 
 

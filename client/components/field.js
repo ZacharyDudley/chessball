@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getField, movePlayer, moveBall } from '../store'
+import { getField, movePlayer, moveBall, takeTurn } from '../store'
 import { getPath } from '../functions'
 import { InfoGUI } from '../components'
 
@@ -265,15 +265,16 @@ class Field extends Component {
         let pathIds = getPath(selectedSpace, space).map(coord => {
           return this.getSpaceIdFromCoords(coord)
         })
-        this.props.ballAction(selectedSpace.id, space.id, pathIds)
+        // this.props.ballAction(selectedSpace.id, space.id, pathIds)
+        this.props.playerTurn('ball', selectedSpace.id, space.id, pathIds)
       } else if (spaceDiv.classList.contains('ball')) {
         this.clearHighlightedNeighbors()
         this.setState({selectedSpace: space})
-        // this.getNeighbors(space.coords, 'add', 3)
         this.getValidNeighbors(space.coords, 3)
       } else {
         this.clearHighlightedNeighbors()
-        this.props.playerAction(selectedSpace, space)
+        // this.props.playerAction(selectedSpace, space)
+        this.props.playerTurn('player', selectedSpace.id, space.id)
       }
 
     }
@@ -334,7 +335,7 @@ class Field extends Component {
 
 
   render() {
-    const { spaces } = this.props
+    const { spaces, turnState } = this.props
 
     return (
       <div className="fieldContainer">
@@ -360,7 +361,10 @@ class Field extends Component {
           })
         }
         </div>
-        <InfoGUI />
+        {
+          this.props.turnState && <InfoGUI />
+        }
+
       </div>
     )
   }
@@ -372,7 +376,9 @@ const mapState = (state, ownProps) => {
     spaces: state.field.spaces,
     // ballLocationId: state.field.ball.locationId,
     ball: state.field.ball,
-    teamId: state.team
+    turnState: state.field.state
+    // isHomeTurn: state.field.state.isHomeTurn,
+    // movesLeft: state.field.state.movesLeft
   }
 }
 
@@ -388,6 +394,9 @@ const mapDispatch = (dispatch, ownProps) => {
     },
     ballAction: (spaceStartId, spaceEndId, spacesPathIds) => {
       dispatch(moveBall(gameId, spaceStartId, spaceEndId, spacesPathIds))
+    },
+    playerTurn: (ballOrPlayer, spaceStartId, spaceEndId, spacesPathIds) => {
+      dispatch(takeTurn(gameId, ballOrPlayer, spaceStartId, spaceEndId, spacesPathIds))
     }
   }
 }

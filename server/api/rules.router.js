@@ -104,32 +104,61 @@ const isValidPlayerMove = (oldSpace, newSpace) => {
   return isSpaceNeighbor(oldSpace.coords, newSpace.coords) && isChosenSpaceFree(newSpace)
 }
 
+let updates = {}
+
+/*  ***  TURN CHECK ***  */
+router.use('/:gameId', function (req, res, next) {
+  const game = firebase.ref(`${req.params.gameId}`)
+
+  game.once('value')
+  .then(snap => {
+    const homeActive = snap.val().state.isHomeTurn
+    const movesLeft = snap.val().state.movesLeft
+
+    if (movesLeft > 1) {
+      updates['/state/movesLeft'] = movesLeft - 1
+    } else {
+      updates['/state/movesLeft'] = 3
+      updates['/state/isHomeTurn'] = !homeActive
+    }
+
+    return updates
+  })
+  .catch(err => next(err))
+  // .then(newData)
+
+  next()
+})
+
 /*  ***  PLAYER MOVEMENT ***  */
 router.put('/:gameId/movePlayer', function (req, res, next) {
+  const game = firebase.ref(`${req.params.gameId}`)
 
-  let updates = {}
-  updates[`/spaces/${req.body.oldSpace.id}/type`] = ''
-  updates[`/spaces/${req.body.oldSpace.id}/typeId`] = ''
-  updates[`/spaces/${req.body.newSpace.id}/type`] = req.body.oldSpace.type
-  updates[`/spaces/${req.body.newSpace.id}/typeId`] = req.body.oldSpace.typeId
+  game.once('value')
+  .then(snap => {
+    const spaceStart = snap.val().spaces[`${req.body.spaceStartId}`]
+    let spaceEnd = snap.val().spaces[`${req.body.spaceEndId}`]
 
+    if (isValidPlayerMove(spaceStart, spaceEnd)) {
+      updates[`/spaces/${req.body.spaceEndId}/type`] = spaceStart.type
+      updates[`/spaces/${req.body.spaceEndId}/typeId`] = spaceStart.typeId
+      updates[`/spaces/${req.body.spaceStartId}/type`] = ''
+      updates[`/spaces/${req.body.spaceStartId}/typeId`] = ''
 
-  //CHECK IF SPACES ARE NEIGHBORS
-  if (isValidPlayerMove(req.body.oldSpace, req.body.newSpace)) {
-    firebase.ref(`/${req.params.gameId}`).update(updates)
+      return updates
+    }
+  })
+  .then(newData => {
+    game.update(newData)
     .then(snap => res.sendStatus(200))
     .catch(err => next(err))
-  } else {
-    console.log('PLAYER not updated')
-  }
-
+  })
+  .catch(err => next(err))
 })
 
 
 /*  ***  BALL MOVEMENT ***  */
 router.put('/:gameId/moveBall', function (req, res, next) {
-
-  let updates = {}
   const game = firebase.ref(`${req.params.gameId}`)
 
   game.once('value')
