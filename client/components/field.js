@@ -12,9 +12,10 @@ class Field extends Component {
     super()
     this.state = {
       selectedSpace: '',
+      selectedPlayer: '',
+      ballSelected: false,
       neighborsOfSelected: [],
       showNeighbors: false,
-      ball: '',
     }
     this.handleClick = this.handleClick.bind(this)
     this.highlightNeighbors = this.highlightNeighbors.bind(this)
@@ -214,6 +215,10 @@ class Field extends Component {
     return +id
   }
 
+  isPlayerOnActiveTeam(space) {
+    return (space.type === 'home' && this.props.turnState.isHomeTurn) || (space.type === 'away' && !this.props.turnState.isHomeTurn)
+  }
+
   handleClick(space) {
     const { selectedSpace } = this.state
     const selectedDivs = document.getElementsByClassName('selected')
@@ -312,8 +317,10 @@ class Field extends Component {
       if (selectedSpace.id !== space.id) {
         if (selectedSpace) this.clearHighlightedNeighbors()
         this.setState({selectedSpace: space})
+        this.setState({selectedPlayer: space})
         this.getValidNeighbors(space.coords, 1)
       } else {
+        this.setState({selectedPlayer: ''})
         this.setState({selectedSpace: ''})
         this.clearHighlightedNeighbors()
       }
@@ -358,7 +365,7 @@ class Field extends Component {
         }
         </div>
         {
-          this.props.turnState && <InfoGUI />
+          turnState && <InfoGUI />
         }
 
       </div>
