@@ -99,37 +99,70 @@ const isSpaceNeighbor = (oldSpaceCoords, newSpaceCoords) => {
   )
 }
 
-
-const isValidPlayerMove = (oldSpace, newSpace) => {
-  return isSpaceNeighbor(oldSpace.coords, newSpace.coords) && isChosenSpaceFree(newSpace)
+const isActiveTeamPlayer = (spaceStart, homeActive) => {
+  return (homeActive && spaceStart.type === 'home') || (!homeActive && spaceStart.type === 'away')
 }
+
+const isValidPlayerMove = (oldSpace, newSpace, homeActive) => {
+  return isActiveTeamPlayer(oldSpace, homeActive) && isSpaceNeighbor(oldSpace.coords, newSpace.coords) && isChosenSpaceFree(newSpace)
+}
+
+let updates = {}
+
+/*  ***  TURN CHECK ***  */
+router.use('/:gameId', function (req, res, next) {
+  const game = firebase.ref(`${req.params.gameId}`)
+
+  game.once('value')
+  .then(snap => {
+    const homeActive = snap.val().state.isHomeTurn
+    const movesLeft = snap.val().state.movesLeft
+    const movesPerTurn = snap.val().state.movesPerTurn
+
+    if (movesLeft > 1) {
+      updates['/state/movesLeft'] = movesLeft - 1
+    } else {
+      updates['/state/movesLeft'] = movesPerTurn
+      updates['/state/isHomeTurn'] = !homeActive
+    }
+
+    return updates
+  })
+  .catch(err => next(err))
+
+  next()
+})
 
 /*  ***  PLAYER MOVEMENT ***  */
 router.put('/:gameId/movePlayer', function (req, res, next) {
+  const game = firebase.ref(`${req.params.gameId}`)
 
-  let updates = {}
-  updates[`/spaces/${req.body.oldSpace.id}/type`] = ''
-  updates[`/spaces/${req.body.oldSpace.id}/typeId`] = ''
-  updates[`/spaces/${req.body.newSpace.id}/type`] = req.body.oldSpace.type
-  updates[`/spaces/${req.body.newSpace.id}/typeId`] = req.body.oldSpace.typeId
+  game.once('value')
+  .then(snap => {
+    const homeActive = snap.val().state.isHomeTurn
+    const spaceStart = snap.val().spaces[`${req.body.spaceStartId}`]
+    let spaceEnd = snap.val().spaces[`${req.body.spaceEndId}`]
 
+    if (isValidPlayerMove(spaceStart, spaceEnd, homeActive)) {
+      updates[`/spaces/${req.body.spaceEndId}/type`] = spaceStart.type
+      updates[`/spaces/${req.body.spaceEndId}/typeId`] = spaceStart.typeId
+      updates[`/spaces/${req.body.spaceStartId}/type`] = ''
+      updates[`/spaces/${req.body.spaceStartId}/typeId`] = ''
 
-  //CHECK IF SPACES ARE NEIGHBORS
-  if (isValidPlayerMove(req.body.oldSpace, req.body.newSpace)) {
-    firebase.ref(`/${req.params.gameId}`).update(updates)
+      return updates
+    }
+  })
+  .then(newData => {
+    game.update(newData)
     .then(snap => res.sendStatus(200))
     .catch(err => next(err))
-  } else {
-    console.log('PLAYER not updated')
-  }
-
+  })
+  .catch(err => next(err))
 })
 
 
 /*  ***  BALL MOVEMENT ***  */
 router.put('/:gameId/moveBall', function (req, res, next) {
-
-  let updates = {}
   const game = firebase.ref(`${req.params.gameId}`)
 
   game.once('value')
@@ -165,62 +198,6 @@ router.put('/:gameId/moveBall', function (req, res, next) {
     .catch(err => next(err))
   })
   .catch(err => next(err))
-
-// firebase.ref(`${req.params.gameId}`).once('value')
-  // .then(snap => {
-  //   const spaceStart = snap.val().spaces[`${req.body.spaceStartId}`]
-  //   const ball = snap.val().ball
-  //   let spacesInPath = req.body.spacesPathIds.map(space => {
-  //     return snap.val().spaces[space]
-  //   });
-
-  //   for (var i = 0; i < spacesInPath.length; i++) {
-  //     if (spacesInPath[i].type) {
-  //       console.log('BLOCKED HERE: ', spacesInPath[i])
-  //       break
-  //     }
-  //     console.log('OKAY: ', spacesInPath[i])
-  //   }
-  //   const spaceEnd = spacesInPath[i - 1]
-
-  //   console.log('END GOAL: ', snap.val().spaces[`${req.body.spaceEndId}`])
-  //   console.log('BLOCK: ', spaceEnd)
-
-  //   let updates = {}
-  //   updates[`/ball/locationId`] = spaceEnd.id
-  //   updates[`/spaces/${req.body.spaceStartId}/type`] = ''
-  //   updates[`/spaces/${spaceEnd.id}/type`] = 'ball'
-
-  //   return updates
-  // })
-
-
-
-
-
-
-
-
-
-  // firebase.ref(`${req.params.gameId}/spaces`).transaction(spaces => {
-  //   return (spaces[`${req.body.spaceStart.id}`], spaces[`${req.body.spaceEnd.id}`])
-  // })
-  // .then(snap => {
-  //   console.log(snap)
-  // })
-  // .catch(err => next(err))
-
-  // //CHECK IF SPACES ARE NEIGHBORS
-  // if (isValidMove(req.body.spaceStart, req.body.spaceEnd)) {
-  //   firebase.ref(`/${req.params.gameId}`).update(updates)
-  //   .then(snap => {
-  //     console.log('BALL SNAP DATA', res.data)
-  //     res.sendStatus(200)
-  //   })
-  //   .catch(err => next(err))
-  // } else {
-  //   console.log('BALL not updated')
-  // }
 })
 
 module.exports = router;

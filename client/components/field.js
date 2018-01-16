@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getField, movePlayer, moveBall } from '../store'
+import { getField, movePlayer, moveBall, takeTurn } from '../store'
 import { getPath } from '../functions'
+import { InfoGUI } from '../components'
 
 import '../css/field.scss';
 
@@ -11,9 +12,10 @@ class Field extends Component {
     super()
     this.state = {
       selectedSpace: '',
+      selectedPlayer: '',
+      ballSelected: false,
       neighborsOfSelected: [],
       showNeighbors: false,
-      ball: '',
     }
     this.handleClick = this.handleClick.bind(this)
     this.highlightNeighbors = this.highlightNeighbors.bind(this)
@@ -213,6 +215,10 @@ class Field extends Component {
     return +id
   }
 
+  isPlayerOnActiveTeam(space) {
+    return (space.type === 'home' && this.props.turnState.isHomeTurn) || (space.type === 'away' && !this.props.turnState.isHomeTurn)
+  }
+
   handleClick(space) {
     const { selectedSpace } = this.state
     const selectedDivs = document.getElementsByClassName('selected')
@@ -264,15 +270,16 @@ class Field extends Component {
         let pathIds = getPath(selectedSpace, space).map(coord => {
           return this.getSpaceIdFromCoords(coord)
         })
-        this.props.ballAction(selectedSpace.id, space.id, pathIds)
+        // this.props.ballAction(selectedSpace.id, space.id, pathIds)
+        this.props.playerTurn('ball', selectedSpace.id, space.id, pathIds)
       } else if (spaceDiv.classList.contains('ball')) {
         this.clearHighlightedNeighbors()
         this.setState({selectedSpace: space})
-        // this.getNeighbors(space.coords, 'add', 3)
         this.getValidNeighbors(space.coords, 3)
       } else {
         this.clearHighlightedNeighbors()
-        this.props.playerAction(selectedSpace, space)
+        // this.props.playerAction(selectedSpace, space)
+        this.props.playerTurn('player', selectedSpace.id, space.id)
       }
 
     }
@@ -310,8 +317,10 @@ class Field extends Component {
       if (selectedSpace.id !== space.id) {
         if (selectedSpace) this.clearHighlightedNeighbors()
         this.setState({selectedSpace: space})
+        this.setState({selectedPlayer: space})
         this.getValidNeighbors(space.coords, 1)
       } else {
+        this.setState({selectedPlayer: ''})
         this.setState({selectedSpace: ''})
         this.clearHighlightedNeighbors()
       }
@@ -333,30 +342,32 @@ class Field extends Component {
 
 
   render() {
-    const { spaces } = this.props
+    const { spaces, turnState } = this.props
 
     return (
-      <div className="field">
-      {
-        spaces && spaces.map(space => {
-          return (<div
-            className={
-              `space ${space.line ? 'line' : ''} ${space.type}`
-              // space.type === 'ball' ? 'space ball'
-              //   : space.type === 'home' ? 'space home'
-              //   : space.type === 'away' ? 'space away'
-              //   : 'space'
+      <div className="fieldContainer">
+        <div className="field">
+        {
+          spaces && spaces.map(space => {
+            return (<div
+              className={
+                `space ${space.line ? 'line' : ''} ${space.type}`
+              }
+              key={space.id}
+              id={space.id}
+              coords={space.coords}
+              onClick={() => {
+                this.handleClick(space)
+              }
             }
-            key={space.id}
-            id={space.id}
-            coords={space.coords}
-            onClick={() => {
-              this.handleClick(space)
-            }
-          }
-          />)
-        })
-      }
+            />)
+          })
+        }
+        </div>
+        {
+          turnState && <InfoGUI />
+        }
+
       </div>
     )
   }
@@ -366,9 +377,8 @@ const mapState = (state, ownProps) => {
   return {
     gameId: state.field.id,
     spaces: state.field.spaces,
-    // ballLocationId: state.field.ball.locationId,
     ball: state.field.ball,
-    teamId: state.team
+    turnState: state.field.state
   }
 }
 
@@ -384,6 +394,9 @@ const mapDispatch = (dispatch, ownProps) => {
     },
     ballAction: (spaceStartId, spaceEndId, spacesPathIds) => {
       dispatch(moveBall(gameId, spaceStartId, spaceEndId, spacesPathIds))
+    },
+    playerTurn: (ballOrPlayer, spaceStartId, spaceEndId, spacesPathIds) => {
+      dispatch(takeTurn(gameId, ballOrPlayer, spaceStartId, spaceEndId, spacesPathIds))
     }
   }
 }

@@ -1,0 +1,34 @@
+.gui-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.players {
+  display: flex;
+  flex-direction: row;
+}
+
+.playerInfo {
+  display: flex;
+  flex-direction: column;
+  border-color: black;
+  border-width: 1rem;
+  border-style: solid;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+
+.color {
+  width: 1rem;
+  height: 1rem;
+
+  &.home {
+    background-color: rgb(2, 0, 124);
+  }
+
+  &.away {
+    background-color: rgb(187, 0, 0);
+  }
+}
