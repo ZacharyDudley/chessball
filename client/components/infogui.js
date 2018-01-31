@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import '../css/infoGui.scss';
 
 const COMPONENT = (props) => {
-
+console.log(props.movesPerTurn)
   return (
     <div className="gui-wrapper">
 
@@ -18,14 +18,34 @@ const COMPONENT = (props) => {
           <h1>{props.isHomeTurn ? '>HOME' : 'HOME'}</h1>
           <div className="color home" />
           <h2>0</h2>
-          <h2> Moves: {props.isHomeTurn ? `${props.movesLeft}` : '-'}</h2>
+          {
+            // <h2> Moves: {props.isHomeTurn ? `${props.movesLeft}` : '-'}</h2>
+
+            <h2> Moves: {
+              props.isHomeTurn ? `${props.movesPerTurn.includes(4) ? '4' : '-' } | ${props.movesPerTurn.includes(3) ? '3' : '-' } | ${props.movesPerTurn.includes(2) ? '2' : '-' } | ${props.movesPerTurn.includes(1) ? '1' : '-' }` : '-'
+            }</h2>
+
+          }
         </div>
 
         <div className="playerInfo">
           <h1>{props.isHomeTurn ? 'AWAY' : '>AWAY'}</h1>
           <div className="color away" />
           <h2>0</h2>
-          <h2> Moves: {props.isHomeTurn ? '-' : `${props.movesLeft}`}</h2>
+          {
+          // <h2> Moves: {
+          //   props.isHomeTurn
+          //     ? '-'
+          //     : `${props.movesLeft}`
+          //   }</h2>
+
+          <h2> Moves: {
+            props.isHomeTurn
+              ? '-'
+              : `${props.movesPerTurn.includes(4) ? '4' : '-' } | ${props.movesPerTurn.includes(3) ? '3' : '-' } | ${props.movesPerTurn.includes(2) ? '2' : '-' } | ${props.movesPerTurn.includes(1) ? '1' : '-' }`
+            }</h2>
+
+          }
         </div>
       </div>
 
@@ -39,7 +59,8 @@ const COMPONENT = (props) => {
 const mapState = (state) => {
   return {
     isHomeTurn: state.field.state.isHomeTurn,
-    movesLeft: state.field.state.movesLeft
+    movesLeft: state.field.state.movesLeft,
+    movesPerTurn: state.field.state.movesPerTurn
   }
 }
 

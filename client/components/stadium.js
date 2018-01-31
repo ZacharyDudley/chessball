@@ -23,7 +23,8 @@ class Stadium extends Component {
     const { handleCreateGame } = this.props
     let sizeW = 20
     let sizeH = 12
-    let movesPerTurn = 5
+    // let movesPerTurn = 5
+    let movesPerTurn = [4, 3, 2, 1]
 
     return (
       <div>

@@ -119,12 +119,16 @@ router.use('/:gameId', function (req, res, next) {
     const movesLeft = snap.val().state.movesLeft
     const movesPerTurn = snap.val().state.movesPerTurn
 
-    if (movesLeft > 1) {
-      updates['/state/movesLeft'] = movesLeft - 1
-    } else {
-      updates['/state/movesLeft'] = movesPerTurn
+    if (!movesPerTurn.length) {
+      updates['/state/movesPerTurn'] = [4, 3, 2, 1]
       updates['/state/isHomeTurn'] = !homeActive
     }
+    // if (movesLeft > 1) {
+    //   updates['/state/movesLeft'] = movesLeft - 1
+    // } else {
+    //   updates['/state/movesLeft'] = movesPerTurn
+    //   updates['/state/isHomeTurn'] = !homeActive
+    // }
 
     return updates
   })
